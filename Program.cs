@@ -11,23 +11,38 @@ internal class Program
         int origWidth = Console.WindowWidth;
         int origHeight = Console.WindowHeight;
 
-        Console.SetWindowSize(120, 60);
+        //Console.SetWindowSize(120, 60);
 
-        Console.Write("Please input the size of grid you wish to print (E.g. 3 for 3x3, etc): ");
-        int mapSize = int.Parse(Console.ReadLine());
+        //Console.Write("Please input the size of grid you wish to print (E.g. 3 for 3x3, etc): ");
+        //int mapSize = int.Parse(Console.ReadLine());
         //int num = 1;
 
 
-        void PrintFile(List<string> filenames, int mapSize)
+        void PrintFile(Map Sea)
 
         {
+            //Get List of Tiles from Sea
+
+            
+            
             //int mapSize = 3;
 
             string padding = "   ";
             string padding2 = "       ";
 
 
-            string directory = @"C:\Users\tommy\Documents\C Sharp Projects\c Sharp Exercises and Solutions\Test\";
+            string startupPath = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.Parent.FullName);
+
+            //Go into project folder
+            startupPath = startupPath + @"\Test\";
+
+            //Set up directory
+            string directory = startupPath;
+            
+            // Read the file as one string. 
+            //string text = System.IO.File.ReadAllText(startupPath);
+
+            //string directory = @"C:\Users\tommy\Documents\C Sharp Projects\c Sharp Exercises and Solutions\Test\";
             
             //Load the border file
             string borderVert = File.ReadAllText($"{directory}BorderVert.txt");
@@ -46,7 +61,7 @@ internal class Program
 
             List<string> strings = new List<string>();
             
-            for(int i = 0; i < txtFileLength * mapSize; i++)
+            for(int i = 0; i < txtFileLength * Sea.MapSize; i++)
             {
                 strings.Add("");
             }
@@ -62,14 +77,14 @@ internal class Program
 
             //Loop over every file in filenames
             //foreach (string filename in filenames) 
-            for (int i = 0; i < filenames.Count; i++)       
+            for (int i = 0; i < Sea.Tiles.Length; i++)       
             {
-                string txtPath = $"{directory}{filenames[i]}";
+                string txtPath = $"{directory}{Sea.Tiles[i]}";
 
                 if (File.Exists(txtPath))
                 {
                     //Int division
-                    int mapRow = (i / mapSize);
+                    int mapRow = (i / Sea.MapSize);
                     int mapRowAdder = mapRow * txtFileLength;
 
                         //Read each line of text file and store in the appropriate string
@@ -83,7 +98,7 @@ internal class Program
 
                             //This needs to use the iterator for the file not the file length- so it works on the first file for each row
                             //Vertical Borders
-                            if (i % mapSize == 0) // Start border
+                            if (i % Sea.MapSize == 0) // Start border
                             {
                                 strings[j + mapRowAdder] = borderVert + strings[j + mapRowAdder] + borderVert;
                             }
@@ -103,7 +118,7 @@ internal class Program
             }
             string colNames = "";
 
-            for(int i = 0; i < mapSize; i++)
+            for(int i = 0; i < Sea.MapSize; i++)
             {
 
                 colNames = $"{colNames}{padding2}{i}";
@@ -113,8 +128,8 @@ internal class Program
 
 
 
-            int frameMultiplier = 8 * mapSize;
-            int borderMultiplier = 8 * mapSize + 1;
+            int frameMultiplier = 8 * Sea.MapSize;
+            int borderMultiplier = 8 * Sea.MapSize + 1;
             //int borderMultiplier = 8 * mapSize + 1;
 
             //string frameMid2 = new string(frameMid, multiplier);
@@ -218,15 +233,134 @@ internal class Program
 
         //    Console.WriteLine();
         //}
+        //One square sized squid
+        int numSmallSquid = 0;
+        //Two square sized squid
+        int numMediumSquid = 0;
+        // Three square sized squid
+        int numLargeSquid = 0;
+        //Four square sized squid
+        int numGiantSquid = 0;
 
-        List<string> strings = new List<string>();
+        //string difficulty = "";
+        int mapSize = 0;
+        int shotCounter = 0;
+        bool loop = true;
 
-        for (int i = 0; i < mapSize * mapSize; i++)
-        {
-            strings.Add("SeaStart.txt");
-        }
+        do {
+            Console.WriteLine("Please select a diffulty (Easy/Medium/Hard)");
+            string difficulty = Console.ReadLine();
+
+            switch (difficulty)
+            {
+                case "Easy":
+                    {
+                        mapSize = 3;
+                        numSmallSquid = 3;
+                        shotCounter = 5;
+                        loop = false;
+                        break;
+                    }
+
+                case "Medium":
+                    mapSize = 4;
+                    numSmallSquid = 3;
+                    numMediumSquid = 1;
+                    shotCounter = 5;
+                    loop = false;
+                    break;
+
+                case "Hard":
+                    mapSize = 8;
+                    numMediumSquid = 1;
+                    numLargeSquid = 1;
+                    numGiantSquid = 1;
+                    shotCounter = 5;
+                    loop = false;
+                    break;
+
+                default:
+                    Console.WriteLine("Please select a correct difficulty.");
+                    break;
+
+            }
+        } while (loop);
+
+
+        Map Sea = new Map(numSmallSquid, numMediumSquid, numLargeSquid, numGiantSquid, mapSize * mapSize);
+
+
+
+
+        //List<string> strings = new List<string>();
+
+        ////Number of grid squares
+        //int numberOfTiles = mapSize * mapSize;
+
+        ////Initialise map to a single start
+
+        //for (int i = 0; i < numberOfTiles; i++)
+        //{
+        //    strings.Add("SeaStart.txt");
+        //}
+
+        ////Create a list of the squares with the places of the squid
         
-        PrintFile(strings, mapSize);
+
+        //List<int> squidPositions = new List<int>();
+
+
+        //Random random = new Random();
+
+        //// For a given difficulty loop through all the different squid sizes and place them appropriately
+
+
+
+
+        ////Generate grid coordiante of squid using random
+        //int squidPosition = random.Next(numberOfTiles);
+
+        
+
+
+        int noSquidRemaining = Sea.NumberOfSquid;
+
+        // The Game Loop
+
+        do
+        {
+            PrintFile(Sea);
+            Console.Write("Please select a grid number to attack: ");
+            int attackGridNumber = int.Parse(Console.ReadLine());
+
+            if (Sea.attack(attackGridNumber))
+            {
+                shotCounter--;
+            }
+
+
+
+        }while(noSquidRemaining > 0 || shotCounter > 0);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         //List<SeaTile> tiles = new List<SeaTile>();
 

@@ -3,10 +3,19 @@
     public class Tile
     {
     
-        private int SeaState { get; init; }
+        public int SeaState { get; set; }
+        public bool SquidPresent { get; set; }
+        public bool Attackable { get; set; }
+
         public Tile(int v)
         {
             this.SeaState = v;
+        }
+        public Tile () //Overloading method (default)
+        {
+            this.SeaState = 1;
+            this.SquidPresent = false;
+            this.Attackable = false;    
         }
 
         public string Parser()
