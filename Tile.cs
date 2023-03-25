@@ -15,10 +15,10 @@
         {
             this.SeaState = 1;
             this.SquidPresent = false;
-            this.Attackable = false;    
+            this.Attackable = true;    
         }
 
-        public string Parser()
+        public string Parser(int SeaState)
         {
 
                 switch (SeaState)
