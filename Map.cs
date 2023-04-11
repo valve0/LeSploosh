@@ -52,7 +52,6 @@ namespace Test
             for (int i = 0; i < NumberOfTiles; i++) 
             {
                 //Fill list with default value of sea state
-                //Tiles.Add(new Tile());
                 Tiles[i] = new Tile();
             
             }
@@ -78,40 +77,10 @@ namespace Test
                         }
 
                     } while (squidPlaced != true);
-
                 }
-
-
-
             }
-
-
-
-            // Generate the positions of the squid based on the number and the numberOfTiles
-            // Place squid in decending order of size to make sure there is space
-
-
-            //Select a random spot in the sea
-            //int spot = random.Next(numberOfTiles);
-
-
-            //Generate a random orienttaion of the squid, where is it pointing? Up down, left or right?
-            //Up = 0, Down = 1, Left = 2, Right = 3.
-            //int direction = random.Next(4);
-
-
-            //Create a list of the spots that the squid would fill
-            //List<int> spots = new List<int>();
-            //spots.Add(spot);
-
-
-
-            //Check whether there is enough free space to place the squid at these spots
-
-
-
-
         }
+
 
         internal bool AttackCheck(int attackGridNumber)
         {
@@ -138,18 +107,11 @@ namespace Test
             //Assumption that Attack Check is run before this method
             if (Tiles[attackGridNumber].SquidPresent)
             {
-                //Hit a valid square with a squid
-                Console.Clear();
-                Tiles[attackGridNumber].SeaState = 3;
-                PrintMap(Sea);              
-                Thread.Sleep(1000);
-                Console.Clear();
-                Tiles[attackGridNumber].SeaState = 1;
-                PrintMap(Sea);
-                Thread.Sleep(1000);
-                Console.Clear();
-                Tiles[attackGridNumber].SeaState = 3;
-                PrintMap(Sea);
+                //Loop through animation
+                foreach (SeaState state in Animations.hit)
+                {
+                    AnimateTile(state, attackGridNumber);
+                }
 
                 Tiles[attackGridNumber].Attackable = false;
                 ShotCounter--;
@@ -157,27 +119,17 @@ namespace Test
                 Console.WriteLine("Squid Hit!");
                 return true;
 
+
+
             }
             else if (!Tiles[attackGridNumber].SquidPresent)
             {
-                //Miss
-                Console.Clear();
-                Tiles[attackGridNumber].SeaState = 7;
-                PrintMap(Sea);
-                Thread.Sleep(1000);
-                Console.Clear();
-                Tiles[attackGridNumber].SeaState = 8;
-                PrintMap(Sea);
-                Thread.Sleep(1000);
-                Console.Clear();
-                Tiles[attackGridNumber].SeaState = 7;
-                PrintMap(Sea);
-                Thread.Sleep(1000);
-                Console.Clear();
-                Tiles[attackGridNumber].SeaState = 2;
-                PrintMap(Sea);
 
-
+                //Loop through animation
+                foreach (SeaState state in Animations.miss)
+                {
+                    AnimateTile(state, attackGridNumber);
+                }
 
                 Tiles[attackGridNumber].Attackable = false;
                 ShotCounter--;
@@ -188,7 +140,16 @@ namespace Test
             return false;
         }
 
-        public void PrintMap(Map Sea)
+        private void AnimateTile(SeaState state, int attackGridNumber)
+        {
+            Tiles[attackGridNumber].seaState = state;
+            Console.Clear();
+            PrintMap();
+            Thread.Sleep(Animations.waitTime);
+        }
+        
+        
+        public void PrintMap()
 
         {
 
@@ -196,7 +157,7 @@ namespace Test
             string padding2 = "       ";
 
             //Get directory of solution
-            string directory = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.Parent.FullName) + @"\Test\";
+            string directory = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.Parent.FullName) + @"\Test\Text Files\";
 
             //Load the static border files
             string borderVert = File.ReadAllText($"{directory}BorderVert.txt");
@@ -212,25 +173,25 @@ namespace Test
             //A row in the grid is made up of txtFileLength * MapSize seperate strings
             List<string> strings = new List<string>();
 
-            for (int i = 0; i < txtFileLength * Sea.MapSize; i++)
+            for (int i = 0; i < txtFileLength * this.MapSize; i++)
             {
                 strings.Add("");
             }
 
 
-            StringBuilder sb = new StringBuilder();
+            //StringBuilder sb = new StringBuilder();
 
 
             //Loop over every file in filenames
             //foreach (string filename in filenames) 
-            for (int i = 0; i < Sea.Tiles.Length; i++)
+            for (int i = 0; i < this.Tiles.Length; i++)
             {
-                string txtPath = $"{directory}{Sea.Tiles[i].Parser(Sea.Tiles[i].SeaState)}";
+                string txtPath = $"{directory}{this.Tiles[i].seaState}.txt";
 
                 if (File.Exists(txtPath))
                 {
                     //Int division
-                    int mapRow = (i / Sea.MapSize);
+                    int mapRow = (i / this.MapSize);
                     int mapRowAdder = mapRow * txtFileLength;
 
                     //Read each line of text file and store in the appropriate string
@@ -244,7 +205,7 @@ namespace Test
 
                         //This needs to use the iterator for the file not the file length- so it works on the first file for each row
                         //Vertical Borders
-                        if (i % Sea.MapSize == 0) // Start border
+                        if (i % this.MapSize == 0) // Start border
                         {
                             strings[j + mapRowAdder] = borderVert + strings[j + mapRowAdder] + borderVert;
                         }
@@ -252,30 +213,20 @@ namespace Test
                         {
                             strings[j + mapRowAdder] = strings[j + mapRowAdder] + borderVert;
                         }
-
                     }
-
-
-
                 }
-                //string text = sb.ToString();
-
-
             }
+
             string colNames = "";
 
-            for (int i = 0; i < Sea.MapSize; i++)
+            for (int i = 0; i < this.MapSize; i++)
             {
-
                 colNames = $"{colNames}{padding2}{i}";
-
             }
 
 
-
-
-            int frameMultiplier = 8 * Sea.MapSize;
-            int borderMultiplier = 8 * Sea.MapSize + 1;
+            int frameMultiplier = 8 * this.MapSize;
+            int borderMultiplier = 8 * this.MapSize + 1;
             //int borderMultiplier = 8 * mapSize + 1;
 
             //string frameMid2 = new string(frameMid, multiplier);
@@ -330,8 +281,8 @@ namespace Test
             //Printing bottom frame
             Console.WriteLine();
             Console.WriteLine(topFrame);
-            Console.WriteLine($"Number of squid remaining: {Sea.NumberOfSquid}");
-            Console.WriteLine($"Number of shots remaining: {Sea.ShotCounter}");
+            Console.WriteLine($"Number of squid remaining: {this.NumberOfSquid}");
+            Console.WriteLine($"Number of shots remaining: {this.ShotCounter}");
 
 
         }

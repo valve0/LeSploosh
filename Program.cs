@@ -6,20 +6,25 @@ using System.Text;
 using System.Xml;
 using Test;
 
+
 internal class Program
 {
     private static void Main(string[] args)
     {
 
         //Get directory of solution
-        string directory = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.Parent.FullName) + @"\Test\";
-        String solutionName = Path.GetFileName(Process.GetCurrentProcess().MainModule.FileName);
-        solutionName = Path.GetFileNameWithoutExtension(solutionName);
-        int origWidth = Console.WindowWidth;
-        int origHeight = Console.WindowHeight;
+        //string directory = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.Parent.FullName) + @"\Test\";
+        //String solutionName = Path.GetFileName(Process.GetCurrentProcess().MainModule.FileName);
+        //solutionName = Path.GetFileNameWithoutExtension(solutionName);
+        
+        
+        //int origWidth = Console.WindowWidth;
+        //int origHeight = Console.WindowHeight;
 
         //Console.SetWindowSize(120, 60);
 
+
+        //%    Set up the game   %//
 
         //intialise variables
         //One square sized squid
@@ -80,31 +85,26 @@ internal class Program
         } while (loop);
 
 
+        //%    The Gameplay Loop   %//
         Map Sea = new Map(numSmallSquid, numMediumSquid, numLargeSquid, numGiantSquid, mapSize, shotCounter);
-
-        
-
-
+        string directory = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.Parent.FullName) + @"\Test\Text Files\";
+        string winFile = directory + "YouWin.txt";
+        string loseFile = directory + "YouLose.txt";
         int noSquidRemaining = Sea.NumberOfSquid;
 
         // The Game Loop
         Console.Clear();
-        Sea.PrintMap(Sea);
+        Sea.PrintMap();
         do
         {
             
             Console.WriteLine("Please select a grid number to attack: ");
             int attackGridNumber = int.Parse(Console.ReadLine());
             Sea.Attack(Sea, attackGridNumber);
-            //Console.Clear();
-            //PrintMap(Sea);
-
-
 
         } while(Sea.NumberOfSquid > 0 && Sea.ShotCounter > 0);
 
-        string winFile = directory + "YouWin.txt";
-        string loseFile = directory + "YouLose.txt";
+        //%    End conditions   %//
 
         if (Sea.NumberOfSquid == 0)
         {
@@ -114,6 +114,14 @@ internal class Program
         {
             PrintFile(loseFile);
         }
+
+
+        string endState = (Sea.NumberOfSquid == 0) ? winFile : loseFile;
+        PrintFile(endState);
+
+
+
+
 
         void PrintFile(string file)
         {
