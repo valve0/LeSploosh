@@ -116,14 +116,14 @@ internal class Program
 
         //%    End conditions   %//
 
-        //if (Game.NumberOfSquid == 0)
-        //{
-        //    PrintTerminal.PrintFile(winFile);          
-        //}
-        //else
-        //{
-        //    PrintTerminal.PrintFile(loseFile);
-        //}
+        if (Game.ShotCounter == 0)
+        {
+            PrintTerminal.PrintLine("You ran out of cannon balls!");
+        }
+        else
+        {
+            PrintTerminal.PrintLine("There aren't enough cannon balls left to get them all!");
+        }
 
         string endState = (Game.NumberOfSquid == 0) ? winFile : loseFile;
         PrintTerminal.PrintFile(endState);
