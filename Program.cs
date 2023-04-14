@@ -86,61 +86,48 @@ internal class Program
 
 
         //%    The Gameplay Loop   %//
-        Map Sea = new Map(numSmallSquid, numMediumSquid, numLargeSquid, numGiantSquid, mapSize, shotCounter);
+        
+
+        GameInfo Game = new GameInfo(numSmallSquid, numMediumSquid, numLargeSquid, numGiantSquid, mapSize, shotCounter);
         string directory = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.Parent.FullName) + @"\Test\Text Files\";
         string winFile = directory + "YouWin.txt";
         string loseFile = directory + "YouLose.txt";
-        int noSquidRemaining = Sea.NumberOfSquid;
+        int noSquidRemaining = Game.NumberOfSquid;
 
         // The Game Loop
         Console.Clear();
-        Sea.PrintMap();
+        //Load the static border files
+        PrintTerminal PrintTerminal = new();
+        PrintTerminal.PrintGameInfo(Game);
         do
         {
             
             Console.WriteLine("Please select a grid number to attack: ");
             int attackGridNumber = int.Parse(Console.ReadLine());
-            Sea.Attack(Sea, attackGridNumber);
+            Game.Attack(Game, attackGridNumber);
 
-        } while(Sea.NumberOfSquid > 0 && Sea.ShotCounter > 0);
+        } while(Game.NumberOfSquid > 0 && Game.ShotCounter > 0);
 
         //%    End conditions   %//
 
-        if (Sea.NumberOfSquid == 0)
+        if (Game.NumberOfSquid == 0)
         {
-            PrintFile(winFile);          
+            PrintTerminal.PrintFile(winFile);          
         }
         else
         {
-            PrintFile(loseFile);
+            PrintTerminal.PrintFile(loseFile);
         }
 
 
-        string endState = (Sea.NumberOfSquid == 0) ? winFile : loseFile;
-        PrintFile(endState);
+        string endState = (Game.NumberOfSquid == 0) ? winFile : loseFile;
+        PrintTerminal.PrintFile(endState);
 
 
 
 
 
-        void PrintFile(string file)
-        {
-            string printString = File.ReadAllText(file);
-            using (StringReader reader = new StringReader(printString))
-            {
-                string line = string.Empty;
-                do
-                {
-                    line = reader.ReadLine();
-                    if (line != null)
-                    {
-                        Console.SetCursorPosition((Console.WindowWidth - line.Length) / 2, Console.CursorTop);
-                        Console.WriteLine(line);
-                    }
-                } while (line != null);
-            }
-
-        }
+        
 
 
 

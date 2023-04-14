@@ -3,36 +3,36 @@
     internal class Tile
     {
 
-        //public int SeaState { get; set; }
+        //public int GameState { get; set; }
 
-        public SeaState seaState;
+        public GameState seaState;
         public bool SquidPresent { get; set; }
         public bool Attackable { get; set; }
 
         //public Tile(int v)
         //{
-        //    this.SeaState = v;
+        //    this.GameState = v;
         //}
         public Tile () //Overloading method (default)
         {
-            this.seaState = SeaState.SeaStart;
+            this.seaState = GameState.GameStart;
             this.SquidPresent = false;
             this.Attackable = true;    
         }
 
 
 
-        //public string Parser(int SeaState)
+        //public string Parser(int GameState)
         //{
 
-        //        switch (SeaState)
+        //        switch (GameState)
         //        {
         //            case 1:
-        //                return "SeaStart.txt";
+        //                return "GameStart.txt";
         //            case 2:
-        //                return "SeaMiss.txt";
+        //                return "GameMiss.txt";
         //            case 3:
-        //                return "SeaHit.txt";
+        //                return "GameHit.txt";
         //            case 4:
         //                return "CrosshairStart.txt";
         //            case 5:

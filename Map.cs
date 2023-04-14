@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace Test
 {
-    internal class Map
+    internal class GameInfo
     {
         public int NumberOfSquid { get; set;}
         private int NumSmallSquid { get; init; }
         private int NumMediumSquid { get; init; }
         private int NumLargeSquid { get; init; }
         private int NumGiantSquid { get; init; }
-        public int MapSize { get; init; }
+        public int GameInfoSize { get; init; }
         private int NumberOfTiles { get; init; }
 
         public int ShotCounter { get; set; }
@@ -22,7 +22,7 @@ namespace Test
         public Tile[] Tiles { get; init; }
         private List<int> Squids { get; init; }
 
-        public Map(int small, int medium, int large, int giant, int mapSize, int shotCounter)
+        public GameInfo(int small, int medium, int large, int giant, int mapSize, int shotCounter)
         {
             Random random = new Random();
             
@@ -30,7 +30,7 @@ namespace Test
             this.NumMediumSquid = medium;
             this.NumLargeSquid = large;
             this.NumGiantSquid = giant;
-            this.MapSize = mapSize;
+            this.GameInfoSize = mapSize;
             this.NumberOfTiles = mapSize * mapSize;
             this.ShotCounter = shotCounter;
 
@@ -94,7 +94,7 @@ namespace Test
             return false;
         }
 
-        internal bool Attack(Map Sea, int attackGridNumber)
+        internal bool Attack(GameInfo Game, int attackGridNumber)
         {
 
             if (!Tiles[attackGridNumber].Attackable) 
@@ -108,9 +108,9 @@ namespace Test
             if (Tiles[attackGridNumber].SquidPresent)
             {
                 //Loop through animation
-                foreach (SeaState state in Animations.hit)
+                foreach (GameState state in Animations.hit)
                 {
-                    AnimateTile(state, attackGridNumber);
+                    AnimateTile(state, attackGridNumber, Game);
                 }
 
                 Tiles[attackGridNumber].Attackable = false;
@@ -126,9 +126,9 @@ namespace Test
             {
 
                 //Loop through animation
-                foreach (SeaState state in Animations.miss)
+                foreach (GameState state in Animations.miss)
                 {
-                    AnimateTile(state, attackGridNumber);
+                    AnimateTile(state, attackGridNumber, Game);
                 }
 
                 Tiles[attackGridNumber].Attackable = false;
@@ -140,154 +140,15 @@ namespace Test
             return false;
         }
 
-        private void AnimateTile(SeaState state, int attackGridNumber)
+        private void AnimateTile(GameState state, int attackGridNumber, GameInfo Game)
         {
             Tiles[attackGridNumber].seaState = state;
             Console.Clear();
-            PrintMap();
+            PrintTerminal PrintTerminal = new();
+            PrintTerminal.PrintGameInfo(Game);
             Thread.Sleep(Animations.waitTime);
         }
         
         
-        public void PrintMap()
-
-        {
-
-            string padding = "   ";
-            string padding2 = "       ";
-
-            //Get directory of solution
-            string directory = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.Parent.FullName) + @"\Test\Text Files\";
-
-            //Load the static border files
-            string borderVert = File.ReadAllText($"{directory}BorderVert.txt");
-            string borderHor = File.ReadAllText($"{directory}BorderHor.txt");
-            string frameEndL = File.ReadAllText($"{directory}FrameEndL.txt");
-            string frameEndR = File.ReadAllText($"{directory}FrameEndR.txt");
-            string frameMid = File.ReadAllText($"{directory}FrameMid.txt");
-
-            //Store constanct textfile line length
-            int txtFileLength = 3;
-
-            //Create an list that will store each line and threrofe ech row of the grid as strings
-            //A row in the grid is made up of txtFileLength * MapSize seperate strings
-            List<string> strings = new List<string>();
-
-            for (int i = 0; i < txtFileLength * this.MapSize; i++)
-            {
-                strings.Add("");
-            }
-
-
-            //StringBuilder sb = new StringBuilder();
-
-
-            //Loop over every file in filenames
-            //foreach (string filename in filenames) 
-            for (int i = 0; i < this.Tiles.Length; i++)
-            {
-                string txtPath = $"{directory}{this.Tiles[i].seaState}.txt";
-
-                if (File.Exists(txtPath))
-                {
-                    //Int division
-                    int mapRow = (i / this.MapSize);
-                    int mapRowAdder = mapRow * txtFileLength;
-
-                    //Read each line of text file and store in the appropriate string
-                    for (int j = 0; j < txtFileLength; j++)
-                    {
-
-                        //Get the current line of the file and add to  string in the list
-                        strings[j + mapRowAdder] = strings[j + mapRowAdder] + File.ReadLines(txtPath).Skip(j).Take(1).First();
-
-
-
-                        //This needs to use the iterator for the file not the file length- so it works on the first file for each row
-                        //Vertical Borders
-                        if (i % this.MapSize == 0) // Start border
-                        {
-                            strings[j + mapRowAdder] = borderVert + strings[j + mapRowAdder] + borderVert;
-                        }
-                        else
-                        {
-                            strings[j + mapRowAdder] = strings[j + mapRowAdder] + borderVert;
-                        }
-                    }
-                }
-            }
-
-            string colNames = "";
-
-            for (int i = 0; i < this.MapSize; i++)
-            {
-                colNames = $"{colNames}{padding2}{i}";
-            }
-
-
-            int frameMultiplier = 8 * this.MapSize;
-            int borderMultiplier = 8 * this.MapSize + 1;
-            //int borderMultiplier = 8 * mapSize + 1;
-
-            //string frameMid2 = new string(frameMid, multiplier);
-
-            var frameMid2 = new StringBuilder().Insert(0, frameMid, frameMultiplier).ToString();
-
-            var borderTop = new StringBuilder().Insert(0, borderHor, borderMultiplier).ToString();
-
-            string topFrame = frameEndL + frameMid2 + frameEndR;
-
-
-            //  PRINTING //
-
-
-            // TOP FRAME
-            Console.WriteLine(topFrame);
-            Console.WriteLine();
-
-
-            // COLUMN NAMES
-            Console.WriteLine(colNames);
-
-            //PADDING AND BORDER TOP
-            Console.Write(padding);
-            Console.WriteLine(borderTop);
-
-
-            // TILES SIDE NUMBERS AND MID BORDERS 
-            for (int i = 0; i < strings.Count; i++)
-            {
-                // For every second string in tile square print the number next to it
-                if (i % txtFileLength == 1)
-                {
-                    Console.Write($" {i / txtFileLength} ");
-                    Console.WriteLine(strings[i]);
-                }
-                else
-                {
-                    Console.Write(padding);
-                    Console.WriteLine(strings[i]);
-                }
-                //After each row is printed, print the border
-                if ((i + 1) % 3 == 0)
-                {
-                    Console.Write(padding);
-                    Console.WriteLine(borderTop);
-                }
-
-
-            }
-
-            //Printing bottom frame
-            Console.WriteLine();
-            Console.WriteLine(topFrame);
-            Console.WriteLine($"Number of squid remaining: {this.NumberOfSquid}");
-            Console.WriteLine($"Number of shots remaining: {this.ShotCounter}");
-
-
-        }
-
-
-
     }
 }

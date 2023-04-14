@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace Test
 {
-    public enum SeaState
+    public enum GameState
     {
 
-        SeaStart,
-        SeaMiss,
-        SeaHit,
+        GameStart,
+        GameMiss,
+        GameHit,
         CrosshairStart,
         CrosshairMiss,
         CrosshairHit,

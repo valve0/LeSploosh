@@ -9,8 +9,8 @@ namespace Test
     public static class Animations
     {
         
-        public static SeaState[] miss = { SeaState.Miss1, SeaState.Miss2, SeaState.Miss1, SeaState.SeaMiss };
-        public static SeaState[] hit = { SeaState.SeaHit, SeaState.SeaStart, SeaState.SeaHit };
+        public static GameState[] miss = { GameState.Miss1, GameState.Miss2, GameState.Miss1, GameState.GameMiss };
+        public static GameState[] hit = { GameState.GameHit, GameState.GameStart, GameState.GameHit };
         public static int waitTime = 800; //Time in millseconds between each state
 
     }
