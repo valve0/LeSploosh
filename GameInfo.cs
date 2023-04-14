@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Test
 {
+    //Class sets up the game and stores all the relevant infomration for the states of differnt elements.
     internal class GameInfo
     {
         public int NumberOfSquid { get; set;}
@@ -86,69 +87,24 @@ namespace Test
         {
             if (Tiles[attackGridNumber].Attackable)
             {
-                Console.WriteLine("Valid Square to attack");
+                PrintTerminal.PrintLine("Valid Square to attack");
                 return true;
 
             }
-            Console.WriteLine("Invalid square to attack");
+            PrintTerminal.PrintLine("Invalid square to attack");
             return false;
         }
 
-        internal bool Attack(GameInfo Game, int attackGridNumber)
+        public void ReduceShotCount()
         {
-
-            if (!Tiles[attackGridNumber].Attackable) 
-            {
-                Console.WriteLine("Tile not attackable");
-                return false; 
-            
-            }
-            
-            //Assumption that Attack Check is run before this method
-            if (Tiles[attackGridNumber].SquidPresent)
-            {
-                //Loop through animation
-                foreach (GameState state in Animations.hit)
-                {
-                    AnimateTile(state, attackGridNumber, Game);
-                }
-
-                Tiles[attackGridNumber].Attackable = false;
-                ShotCounter--;
-                NumberOfSquid--;
-                Console.WriteLine("Squid Hit!");
-                return true;
-
-
-
-            }
-            else if (!Tiles[attackGridNumber].SquidPresent)
-            {
-
-                //Loop through animation
-                foreach (GameState state in Animations.miss)
-                {
-                    AnimateTile(state, attackGridNumber, Game);
-                }
-
-                Tiles[attackGridNumber].Attackable = false;
-                ShotCounter--;
-                Console.WriteLine("Miss");
-                return true;
-            }
-            Console.WriteLine("ERROR");
-            return false;
+            ShotCounter--;
         }
 
-        private void AnimateTile(GameState state, int attackGridNumber, GameInfo Game)
+        public void ReduceSquidCount()
         {
-            Tiles[attackGridNumber].seaState = state;
-            Console.Clear();
-            PrintTerminal PrintTerminal = new();
-            PrintTerminal.PrintGameInfo(Game);
-            Thread.Sleep(Animations.waitTime);
+            NumberOfSquid--;
         }
-        
-        
+
+
     }
 }

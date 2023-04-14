@@ -43,15 +43,15 @@ namespace Test
             catch (FileNotFoundException fnfex)
             {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("The file couldn't be found!");
-                    Console.WriteLine(fnfex.Message);
-                    Console.WriteLine(fnfex.StackTrace);
+                    PrintTerminal.PrintLine("The file couldn't be found!");
+                    PrintTerminal.PrintLine(fnfex.Message);
+                    PrintTerminal.PrintLine(fnfex.StackTrace);
             }
             catch (Exception ex)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Something went wrong while loading the file!");
-                Console.WriteLine(ex.Message);
+                PrintTerminal.PrintLine("Something went wrong while loading the file!");
+                PrintTerminal.PrintLine(ex.Message);
             }
             finally
             {

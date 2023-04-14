@@ -11,13 +11,13 @@ internal class Program
 {
     private static void Main(string[] args)
     {
-
+        PrintTerminal PrintTerminal = new();
         //Get directory of solution
         //string directory = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.Parent.FullName) + @"\Test\";
         //String solutionName = Path.GetFileName(Process.GetCurrentProcess().MainModule.FileName);
         //solutionName = Path.GetFileNameWithoutExtension(solutionName);
-        
-        
+
+
         //int origWidth = Console.WindowWidth;
         //int origHeight = Console.WindowHeight;
 
@@ -36,14 +36,14 @@ internal class Program
         //Four square sized squid
         int numGiantSquid = 0;
 
-        //string difficulty = "";
+        //Map size is a square of the int value i.e 3 = 3x3
         int mapSize = 0;
         int shotCounter = 0;
         bool loop = true;
 
         do {
-            Console.WriteLine("Please select a diffulty (Easy/Medium/Hard)");
-            string difficulty = Console.ReadLine();
+            PrintTerminal.PrintLine("Please select a diffulty (Easy/Medium/Hard)");
+            string difficulty = PrintTerminal.ReadLine();
 
             switch (difficulty)
             {
@@ -51,6 +51,9 @@ internal class Program
                     {
                         mapSize = 3;
                         numSmallSquid = 3;
+                        numMediumSquid = 0;
+                        numLargeSquid = 0;
+                        numGiantSquid = 0;
                         shotCounter = 5;
                         loop = false;
                         break;
@@ -61,6 +64,8 @@ internal class Program
                         mapSize = 4;
                         numSmallSquid = 3;
                         numMediumSquid = 1;
+                        numLargeSquid = 0;
+                        numGiantSquid = 0;
                         shotCounter = 5;
                         loop = false;
                         break;
@@ -69,6 +74,7 @@ internal class Program
                 case "Hard":
                     { 
                         mapSize = 8;
+                        numSmallSquid = 0;
                         numMediumSquid = 1;
                         numLargeSquid = 1;
                         numGiantSquid = 1;
@@ -78,7 +84,7 @@ internal class Program
                     }
 
                 default:
-                    Console.WriteLine("Please select a correct difficulty.");
+                    PrintTerminal.PrintLine("Please select a correct difficulty.");
                     break;
 
             }
@@ -97,37 +103,82 @@ internal class Program
         // The Game Loop
         Console.Clear();
         //Load the static border files
-        PrintTerminal PrintTerminal = new();
+        
         PrintTerminal.PrintGameInfo(Game);
         do
         {
             
-            Console.WriteLine("Please select a grid number to attack: ");
-            int attackGridNumber = int.Parse(Console.ReadLine());
-            Game.Attack(Game, attackGridNumber);
+            PrintTerminal.PrintLine("Please select a grid number to attack: ");
+            int attackGridNumber = int.Parse(PrintTerminal.ReadLine());
+            Attack(Game, attackGridNumber);
 
         } while(Game.NumberOfSquid > 0 && Game.ShotCounter > 0);
 
         //%    End conditions   %//
 
-        if (Game.NumberOfSquid == 0)
-        {
-            PrintTerminal.PrintFile(winFile);          
-        }
-        else
-        {
-            PrintTerminal.PrintFile(loseFile);
-        }
-
+        //if (Game.NumberOfSquid == 0)
+        //{
+        //    PrintTerminal.PrintFile(winFile);          
+        //}
+        //else
+        //{
+        //    PrintTerminal.PrintFile(loseFile);
+        //}
 
         string endState = (Game.NumberOfSquid == 0) ? winFile : loseFile;
         PrintTerminal.PrintFile(endState);
 
 
+        //Game Logic
 
+        bool Attack(GameInfo Game, int attackGridNumber)
+        {
 
+            if (!Game.Tiles[attackGridNumber].Attackable)
+            {
+                PrintTerminal.PrintLine("Tile not attackable");
+                return false;
+
+            }
+
+            //Assumption that Attack Check is run before this method
+            if (Game.Tiles[attackGridNumber].SquidPresent)
+            {
+                //Loop through animation
+                foreach (GameState state in Animations.hit)
+                {
+                    PrintTerminal.AnimateTile(state, attackGridNumber, Game);
+                }
+
+                Game.Tiles[attackGridNumber].Attackable = false;
+                Game.ReduceShotCount();
+                Game.ReduceSquidCount();
+                PrintTerminal.PrintLine("Squid Hit!");
+                return true;
+            }
+            else if (!Game.Tiles[attackGridNumber].SquidPresent)
+            {
+
+                //Loop through animation
+                foreach (GameState state in Animations.miss)
+                {
+                    PrintTerminal.AnimateTile(state, attackGridNumber, Game);
+                }
+
+                Game.Tiles[attackGridNumber].Attackable = false;
+                Game.ReduceShotCount();
+                PrintTerminal.PrintLine("Miss");
+                return true;
+            }
+
+            PrintTerminal.PrintLine("ERROR");
+            return false;
+
+        }
 
         
+
+
 
 
 

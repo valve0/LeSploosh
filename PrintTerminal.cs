@@ -11,7 +11,7 @@ namespace Test
         static string padding = "   ";
         static string padding2 = "       ";
 
-        public void PrintGameInfo(GameInfo GameInfo)
+        public static void PrintGameInfo(GameInfo GameInfo)
         {
 
             //Load the static border files
@@ -99,16 +99,16 @@ namespace Test
 
 
             // TOP FRAME
-            Console.WriteLine(topFrame);
-            Console.WriteLine();
+            PrintTerminal.PrintLine(topFrame);
+            PrintTerminal.PrintLine();
 
 
             // COLUMN NAMES
-            Console.WriteLine(colNames);
+            PrintTerminal.PrintLine(colNames);
 
             //PADDING AND BORDER TOP
             Console.Write(padding);
-            Console.WriteLine(borderTop);
+            PrintTerminal.PrintLine(borderTop);
 
 
             // TILES SIDE NUMBERS AND MID BORDERS 
@@ -118,37 +118,44 @@ namespace Test
                 if (i % txtFileLength == 1)
                 {
                     Console.Write($" {i / txtFileLength} ");
-                    Console.WriteLine(strings[i]);
+                    PrintTerminal.PrintLine(strings[i]);
                 }
                 else
                 {
                     Console.Write(padding);
-                    Console.WriteLine(strings[i]);
+                    PrintTerminal.PrintLine(strings[i]);
                 }
                 //After each row is printed, print the border
                 if ((i + 1) % 3 == 0)
                 {
                     Console.Write(padding);
-                    Console.WriteLine(borderTop);
+                    PrintTerminal.PrintLine(borderTop);
                 }
 
 
             }
 
             //Printing bottom frame
-            Console.WriteLine();
-            Console.WriteLine(topFrame);
-            Console.WriteLine($"Number of squid remaining: {GameInfo.NumberOfSquid}");
-            Console.WriteLine($"Number of shots remaining: {GameInfo.ShotCounter}");
+            PrintTerminal.PrintLine();
+            PrintTerminal.PrintLine(topFrame);
+            PrintTerminal.PrintLine($"Number of squid remaining: {GameInfo.NumberOfSquid}");
+            PrintTerminal.PrintLine($"Number of shots remaining: {GameInfo.ShotCounter}");
 
 
         }
 
-        public void PrintLine(string line)
+        public static void PrintLine(string line)
         { Console.WriteLine(line); }
 
+        //Overloaded for no input i.e new line
+        public static void PrintLine()
+        { Console.WriteLine(); }
 
-        public void PrintFile(string file)
+        public static string ReadLine()
+        { return Console.ReadLine(); }
+
+
+        public static void PrintFile(string file)
         {
             string printString = File.ReadAllText(file);
             using (StringReader reader = new StringReader(printString))
@@ -160,11 +167,19 @@ namespace Test
                     if (line != null)
                     {
                         Console.SetCursorPosition((Console.WindowWidth - line.Length) / 2, Console.CursorTop);
-                        Console.WriteLine(line);
+                        PrintTerminal.PrintLine(line);
                     }
                 } while (line != null);
             }
 
+        }
+
+        public static void AnimateTile(GameState state, int attackGridNumber, GameInfo Game)
+        {
+            Game.Tiles[attackGridNumber].seaState = state;
+            Console.Clear();
+            PrintGameInfo(Game);
+            Thread.Sleep(Animations.waitTime);
         }
 
 
