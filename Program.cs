@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Xml;
-using Test;
+using LeSploosh;
 
 
 internal class Program
@@ -12,11 +12,6 @@ internal class Program
     private static void Main(string[] args)
     {
         PrintTerminal PrintTerminal = new();
-        //Get directory of solution
-        //string directory = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.Parent.FullName) + @"\Test\";
-        //String solutionName = Path.GetFileName(Process.GetCurrentProcess().MainModule.FileName);
-        //solutionName = Path.GetFileNameWithoutExtension(solutionName);
-
 
         //int origWidth = Console.WindowWidth;
         //int origHeight = Console.WindowHeight;
@@ -95,7 +90,7 @@ internal class Program
         
 
         GameInfo Game = new GameInfo(numSmallSquid, numMediumSquid, numLargeSquid, numGiantSquid, mapSize, shotCounter);
-        string directory = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.Parent.FullName) + @"\Test\Text Files\";
+        string directory = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.Parent.FullName) + @"\LeSploosh\Text Files\";
         string winFile = directory + "YouWin.txt";
         string loseFile = directory + "YouLose.txt";
         int noSquidRemaining = Game.NumberOfSquid;
@@ -108,13 +103,37 @@ internal class Program
         do
         {
             
-            PrintTerminal.PrintLine("Please select a grid number to attack: ");
-            int attackGridNumber = int.Parse(PrintTerminal.ReadLine());
-            Attack(Game, attackGridNumber);
+            PrintTerminal.PrintLine("Please use the Arrows Keys to move the crosshair and press Space to attack");
+            var ch = Console.ReadKey(false).Key;
+
+            switch (ch)
+            {
+                case ConsoleKey.Spacebar:
+                    Attack(Game);
+                    break;
+                case ConsoleKey.UpArrow:
+                    Game.MoveCursorUp();
+                    break;
+                case ConsoleKey.DownArrow:
+                    Game.MoveCursorDown();
+                    break;
+                case ConsoleKey.LeftArrow:
+                    Game.MoveCursorLeft();
+                    break;
+                case ConsoleKey.RightArrow:
+                    Game.MoveCursorRight();
+                    break;
+                default:
+                    //Invalid selection: do nothing
+                    Console.WriteLine("WRONG INPUT SELECTED");
+                    break;
+            }
 
         } while(Game.NumberOfSquid > 0 && Game.ShotCounter > 0);
 
         //%    End conditions   %//
+
+        Console.Clear();
 
         if (Game.ShotCounter == 0)
         {
@@ -131,8 +150,9 @@ internal class Program
 
         //Game Logic
 
-        bool Attack(GameInfo Game, int attackGridNumber)
+        bool Attack(GameInfo Game)
         {
+            int attackGridNumber = Game.ActiveGridNumber;
 
             if (!Game.Tiles[attackGridNumber].Attackable)
             {
@@ -158,13 +178,17 @@ internal class Program
             }
             else if (!Game.Tiles[attackGridNumber].SquidPresent)
             {
-
+                //Temporarly turn off Crosshair
+                Game.Tiles[attackGridNumber].CrosshairBool = false;
                 //Loop through animation
                 foreach (GameState state in Animations.miss)
                 {
                     PrintTerminal.AnimateTile(state, attackGridNumber, Game);
                 }
+                //Turn crosshair back on
+                Game.Tiles[attackGridNumber].CrosshairBool = true;
 
+                //Set tile to not be attackable
                 Game.Tiles[attackGridNumber].Attackable = false;
                 Game.ReduceShotCount();
                 PrintTerminal.PrintLine("Miss");
@@ -175,12 +199,5 @@ internal class Program
             return false;
 
         }
-
-        
-
-
-
-
-
     }
 }

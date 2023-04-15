@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Test
+namespace LeSploosh
 {
     internal class PrintTerminal
     {
@@ -27,12 +27,12 @@ namespace Test
             int txtFileLength = 3;
 
             int numberOfTiles = GameInfo.Tiles.Length;
-            int mapSize = GameInfo.GameInfoSize;
+            int mapSize = GameInfo.Size;
 
 
 
             //Create an list that will store each line and threrofe ech row of the grid as strings
-            //A row in the grid is made up of txtFileLength * GameInfoSize seperate strings
+            //A row in the grid is made up of txtFileLength * Size seperate strings
             List<string> strings = new List<string>();
 
             for (int i = 0; i < txtFileLength * mapSize; i++)
@@ -44,9 +44,33 @@ namespace Test
             //Loop through the files and get the Gamestates- assigning the correct file for each
             for (int i = 0; i < numberOfTiles; i++)
             {
-                //string txtPath = $"{directory}{this.Tiles[i].seaState}.txt";
 
-                string fileName = $"{GameInfo.Tiles[i].seaState}.txt";
+                string fileName = string.Empty;
+
+                //Logic to determine whether the file should be a type of seastate or a crosshair
+
+                if (GameInfo.Tiles[i].CrosshairBool == true)
+                {
+                    //Figure out what kind of crosshair to print for the tile
+                    if(GameInfo.Tiles[i].SeaState == GameState.GameStart)
+                    {
+                        fileName = $"CrosshairStart.txt";
+                    }
+                    else if(GameInfo.Tiles[i].SeaState == GameState.GameMiss)
+                    {
+                        fileName = $"CrosshairMiss.txt";
+                    }
+                    else if(GameInfo.Tiles[i].SeaState == GameState.GameHit)
+                    {
+                        fileName = $"CrosshairHit.txt";
+                    }
+                }
+                else
+                {
+                    fileName = $"{GameInfo.Tiles[i].SeaState}.txt";
+                }
+
+                
 
                 //Int division
                 int mapRow = (i / mapSize);
@@ -76,14 +100,14 @@ namespace Test
 
             string colNames = "";
 
-            for (int i = 0; i < GameInfo.GameInfoSize; i++)
+            for (int i = 0; i < GameInfo.Size; i++)
             {
                 colNames = $"{colNames}{padding2}{i}";
             }
 
 
-            int frameMultiplier = 8 * GameInfo.GameInfoSize;
-            int borderMultiplier = 8 * GameInfo.GameInfoSize + 1;
+            int frameMultiplier = 8 * GameInfo.Size;
+            int borderMultiplier = 8 * GameInfo.Size + 1;
             //int borderMultiplier = 8 * mapSize + 1;
 
             //string frameMid2 = new string(frameMid, multiplier);
@@ -94,6 +118,8 @@ namespace Test
 
             string topFrame = frameEndL[0] + frameMid2 + frameEndR[0];
 
+            //Cleare console just beofre we print to reduce stutter;
+            Console.Clear();
 
             //  PRINTING //
 
@@ -176,7 +202,10 @@ namespace Test
 
         public static void AnimateTile(GameState state, int attackGridNumber, GameInfo Game)
         {
-            Game.Tiles[attackGridNumber].seaState = state;
+
+
+
+            Game.Tiles[attackGridNumber].SeaState = state;
             Console.Clear();
             PrintGameInfo(Game);
             Thread.Sleep(Animations.waitTime);

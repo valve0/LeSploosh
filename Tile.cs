@@ -1,13 +1,14 @@
-﻿namespace Test
+﻿namespace LeSploosh
 {
     internal class Tile
     {
 
         //public int GameState { get; set; }
 
-        public GameState seaState;
+        public GameState SeaState { get; set; }
         public bool SquidPresent { get; set; }
         public bool Attackable { get; set; }
+        public bool CrosshairBool { get; set; }
 
         //public Tile(int v)
         //{
@@ -15,9 +16,10 @@
         //}
         public Tile () //Overloading method (default)
         {
-            this.seaState = GameState.GameStart;
+            this.SeaState = GameState.GameStart;
             this.SquidPresent = false;
-            this.Attackable = true;    
+            this.Attackable = true;
+            this.CrosshairBool = false;
         }
 
 

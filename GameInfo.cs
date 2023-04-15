@@ -4,17 +4,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Test
+namespace LeSploosh
 {
     //Class sets up the game and stores all the relevant infomration for the states of differnt elements.
     internal class GameInfo
     {
+        
+        public int ActiveGridNumber { get; set; }
+        
         public int NumberOfSquid { get; set;}
         private int NumSmallSquid { get; init; }
         private int NumMediumSquid { get; init; }
         private int NumLargeSquid { get; init; }
         private int NumGiantSquid { get; init; }
-        public int GameInfoSize { get; init; }
+        public int Size { get; init; }
         private int NumberOfTiles { get; init; }
 
         public int ShotCounter { get; set; }
@@ -31,9 +34,10 @@ namespace Test
             this.NumMediumSquid = medium;
             this.NumLargeSquid = large;
             this.NumGiantSquid = giant;
-            this.GameInfoSize = mapSize;
+            this.Size = mapSize;
             this.NumberOfTiles = mapSize * mapSize;
             this.ShotCounter = shotCounter;
+
 
 
             int[] squidNumbers = new int[4];
@@ -57,9 +61,17 @@ namespace Test
             
             }
 
-            
+            //Set the first tile to have the crosshair to begin with.
+            Tiles[0].CrosshairBool = true;
+            //first grid number is defeault start position for crosshair
+            this.ActiveGridNumber = 0;
+
+
+
+            //Placing the squids
+
             //Loop through each group of squid starting with small
-            foreach( int squid in squidNumbers)
+            foreach ( int squid in squidNumbers)
             {
 
                 for (int i = 0; i< squid; i++)
@@ -105,6 +117,64 @@ namespace Test
             NumberOfSquid--;
         }
 
+        public void MoveCursorUp()
+        {
+            //Check to see if not at top
+            if (ActiveGridNumber - Size >= 0 )
+            {
+                Tiles[ActiveGridNumber].CrosshairBool = false;
 
+                ActiveGridNumber = ActiveGridNumber - Size;
+
+                Tiles[ActiveGridNumber].CrosshairBool = true;
+
+                PrintTerminal.PrintGameInfo(this);
+            }
+        }
+
+        public void MoveCursorDown()
+        {
+            //Check to see if not at bottom
+            if (ActiveGridNumber + Size <= (Size * Size - 1))
+            {
+                Tiles[ActiveGridNumber].CrosshairBool = false;
+
+                ActiveGridNumber = ActiveGridNumber + Size;
+
+                Tiles[ActiveGridNumber].CrosshairBool = true;
+
+                PrintTerminal.PrintGameInfo(this);
+            }
+        }
+
+        public void MoveCursorLeft()
+        {
+            //Check to see if not at far left
+            if (ActiveGridNumber % Size != 0)
+            {
+                Tiles[ActiveGridNumber].CrosshairBool = false;
+
+                ActiveGridNumber = ActiveGridNumber - 1;
+
+                Tiles[ActiveGridNumber].CrosshairBool = true;
+
+                PrintTerminal.PrintGameInfo(this);
+            }
+        }
+
+        public void MoveCursorRight()
+        {
+            //Check to see if not at far right
+            if (ActiveGridNumber % Size != (Size - 1))
+            {
+                Tiles[ActiveGridNumber].CrosshairBool = false;
+
+                ActiveGridNumber = ActiveGridNumber + 1;
+
+                Tiles[ActiveGridNumber].CrosshairBool = true;
+
+                PrintTerminal.PrintGameInfo(this);
+            }
+        }
     }
 }

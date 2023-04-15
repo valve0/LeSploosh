@@ -6,17 +6,11 @@ using System.Threading.Tasks;
 
 namespace LeSploosh
 {
-    public enum GameState
+    public enum CrosshairState
     {
-
-        GameStart,
-        GameMiss,
-        GameHit,
+        none,
         CrosshairStart,
-        CrosshairMiss,
         CrosshairHit,
-        Miss1,
-        Miss2
-
+        CrosshairMiss
     }
 }
