@@ -102,8 +102,7 @@ internal class Program
         PrintTerminal.PrintGameInfo(Game);
         do
         {
-            
-            PrintTerminal.PrintLine("Please use the Arrows Keys to move the crosshair and press Space to attack");
+           
             var ch = Console.ReadKey(false).Key;
 
             switch (ch)
@@ -125,7 +124,6 @@ internal class Program
                     break;
                 default:
                     //Invalid selection: do nothing
-                    Console.WriteLine("WRONG INPUT SELECTED");
                     break;
             }
 

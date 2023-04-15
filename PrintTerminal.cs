@@ -166,6 +166,7 @@ namespace LeSploosh
             PrintTerminal.PrintLine(topFrame);
             PrintTerminal.PrintLine($"Number of squid remaining: {GameInfo.NumberOfSquid}");
             PrintTerminal.PrintLine($"Number of shots remaining: {GameInfo.ShotCounter}");
+            PrintTerminal.PrintLine("Please use the Arrows Keys to move the crosshair and press Space to attack");
 
 
         }
