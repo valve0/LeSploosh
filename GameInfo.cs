@@ -11,7 +11,6 @@ namespace LeSploosh
     {
         
         public int ActiveGridNumber { get; set; }
-        
         public int NumberOfSquid { get; set;}
         private int NumSmallSquid { get; init; }
         private int NumMediumSquid { get; init; }
@@ -19,7 +18,6 @@ namespace LeSploosh
         private int NumGiantSquid { get; init; }
         public int Size { get; init; }
         private int NumberOfTiles { get; init; }
-
         public int ShotCounter { get; set; }
 
         //private List<Tile> Tiles { get; set; }
@@ -175,6 +173,58 @@ namespace LeSploosh
 
                 PrintTerminal.PrintGameInfo(this);
             }
+        }
+
+        //Game Logic
+
+        public bool Attack()
+        {
+            int attackGridNumber = this.ActiveGridNumber;
+
+            if (!this.Tiles[attackGridNumber].Attackable)
+            {
+                PrintTerminal.PrintLine("Tile not attackable");
+                return false;
+
+            }
+
+            //Assumption that Attack Check is run before this method
+            if (this.Tiles[attackGridNumber].SquidPresent)
+            {
+                //Loop through animation
+                foreach (TileState state in Animations.hit)
+                {
+                    PrintTerminal.AnimateTile(state, attackGridNumber, this);
+                }
+
+                this.Tiles[attackGridNumber].Attackable = false;
+                this.ReduceShotCount();
+                this.ReduceSquidCount();
+                PrintTerminal.PrintLine("Squid Hit!");
+                return true;
+            }
+            else if (!this.Tiles[attackGridNumber].SquidPresent)
+            {
+                //Temporarly turn off Crosshair
+                this.Tiles[attackGridNumber].CrosshairBool = false;
+                //Loop through animation
+                foreach (TileState state in Animations.miss)
+                {
+                    PrintTerminal.AnimateTile(state, attackGridNumber, this);
+                }
+                //Turn crosshair back on
+                this.Tiles[attackGridNumber].CrosshairBool = true;
+
+                //Set tile to not be attackable
+                this.Tiles[attackGridNumber].Attackable = false;
+                this.ReduceShotCount();
+                PrintTerminal.PrintLine("Miss");
+                return true;
+            }
+
+            PrintTerminal.PrintLine("ERROR");
+            return false;
+
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LeSploosh
 {
-    public enum GameState
+    public enum TileState
     {
 
         GameStart,

@@ -1,11 +1,8 @@
-﻿
-//Setting file variables
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Xml;
 using LeSploosh;
-
 
 internal class Program
 {
@@ -108,7 +105,7 @@ internal class Program
             switch (ch)
             {
                 case ConsoleKey.Spacebar:
-                    Attack(Game);
+                    Game.Attack();
                     break;
                 case ConsoleKey.UpArrow:
                     Game.MoveCursorUp();
@@ -146,56 +143,6 @@ internal class Program
         PrintTerminal.PrintFile(endState);
 
 
-        //Game Logic
-
-        bool Attack(GameInfo Game)
-        {
-            int attackGridNumber = Game.ActiveGridNumber;
-
-            if (!Game.Tiles[attackGridNumber].Attackable)
-            {
-                PrintTerminal.PrintLine("Tile not attackable");
-                return false;
-
-            }
-
-            //Assumption that Attack Check is run before this method
-            if (Game.Tiles[attackGridNumber].SquidPresent)
-            {
-                //Loop through animation
-                foreach (GameState state in Animations.hit)
-                {
-                    PrintTerminal.AnimateTile(state, attackGridNumber, Game);
-                }
-
-                Game.Tiles[attackGridNumber].Attackable = false;
-                Game.ReduceShotCount();
-                Game.ReduceSquidCount();
-                PrintTerminal.PrintLine("Squid Hit!");
-                return true;
-            }
-            else if (!Game.Tiles[attackGridNumber].SquidPresent)
-            {
-                //Temporarly turn off Crosshair
-                Game.Tiles[attackGridNumber].CrosshairBool = false;
-                //Loop through animation
-                foreach (GameState state in Animations.miss)
-                {
-                    PrintTerminal.AnimateTile(state, attackGridNumber, Game);
-                }
-                //Turn crosshair back on
-                Game.Tiles[attackGridNumber].CrosshairBool = true;
-
-                //Set tile to not be attackable
-                Game.Tiles[attackGridNumber].Attackable = false;
-                Game.ReduceShotCount();
-                PrintTerminal.PrintLine("Miss");
-                return true;
-            }
-
-            PrintTerminal.PrintLine("ERROR");
-            return false;
-
-        }
+      
     }
 }

@@ -52,15 +52,15 @@ namespace LeSploosh
                 if (GameInfo.Tiles[i].CrosshairBool == true)
                 {
                     //Figure out what kind of crosshair to print for the tile
-                    if(GameInfo.Tiles[i].SeaState == GameState.GameStart)
+                    if(GameInfo.Tiles[i].SeaState == TileState.GameStart)
                     {
                         fileName = $"CrosshairStart.txt";
                     }
-                    else if(GameInfo.Tiles[i].SeaState == GameState.GameMiss)
+                    else if(GameInfo.Tiles[i].SeaState == TileState.GameMiss)
                     {
                         fileName = $"CrosshairMiss.txt";
                     }
-                    else if(GameInfo.Tiles[i].SeaState == GameState.GameHit)
+                    else if(GameInfo.Tiles[i].SeaState == TileState.GameHit)
                     {
                         fileName = $"CrosshairHit.txt";
                     }
@@ -119,7 +119,7 @@ namespace LeSploosh
             string topFrame = frameEndL[0] + frameMid2 + frameEndR[0];
 
             //Cleare console just beofre we print to reduce stutter;
-            Console.Clear();
+            Console.SetCursorPosition(0, 0);
 
             //  PRINTING //
 
@@ -201,13 +201,13 @@ namespace LeSploosh
 
         }
 
-        public static void AnimateTile(GameState state, int attackGridNumber, GameInfo Game)
+        public static void AnimateTile(TileState state, int attackGridNumber, GameInfo Game)
         {
 
 
 
             Game.Tiles[attackGridNumber].SeaState = state;
-            Console.Clear();
+            Console.SetCursorPosition(0, 0);
             PrintGameInfo(Game);
             Thread.Sleep(Animations.waitTime);
         }
