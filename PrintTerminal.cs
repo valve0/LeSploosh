@@ -31,7 +31,7 @@ namespace LeSploosh
 
 
 
-            //Create an list that will store each line and threrofe ech row of the grid as strings
+            //Create an list that will store each line and therefore each row of the grid as strings
             //A row in the grid is made up of txtFileLength * Size seperate strings
             List<string> strings = new List<string>();
 
@@ -42,6 +42,42 @@ namespace LeSploosh
 
 
             //Loop through the files and get the Gamestates- assigning the correct file for each
+
+            //Loop through all the tiles in the 2d array
+
+
+            for(int row = 0; row < GameInfo.Size; row++)
+            {
+                //Create new string to store row of tile strings
+                string tileRowString = string.Empty;
+               
+                //Add left border to Row string
+
+
+
+                for (int col =  0; col < GameInfo.Size; col++)
+                {
+
+                    //Return correct state of tile for row,col back to tileRowString
+
+
+                }  
+
+
+
+
+                //Add each row of Tiles to new string in list of strings
+                strings.Add(tileRowString)
+
+            }
+
+
+
+
+
+
+
+
             for (int i = 0; i < numberOfTiles; i++)
             {
 
@@ -171,6 +207,36 @@ namespace LeSploosh
 
         }
 
+
+
+        internal string ReturnTileString(Tile tile)
+        {
+            if (GameInfo.Tiles[i].CrosshairBool == true)
+            {
+                //Figure out what kind of crosshair to print for the tile
+                if (GameInfo.Tiles[i].SeaState == TileState.GameStart)
+                {
+                    fileName = $"CrosshairStart.txt";
+                }
+                else if (GameInfo.Tiles[i].SeaState == TileState.GameMiss)
+                {
+                    fileName = $"CrosshairMiss.txt";
+                }
+                else if (GameInfo.Tiles[i].SeaState == TileState.GameHit)
+                {
+                    fileName = $"CrosshairHit.txt";
+                }
+            }
+            else
+            {
+                fileName = $"{GameInfo.Tiles[i].SeaState}.txt";
+            }
+
+
+        }
+
+
+
         public static void PrintLine(string line)
         { Console.WriteLine(line); }
 
@@ -203,9 +269,6 @@ namespace LeSploosh
 
         public static void AnimateTile(TileState state, int attackGridNumber, GameInfo Game)
         {
-
-
-
             Game.Tiles[attackGridNumber].SeaState = state;
             Console.SetCursorPosition(0, 0);
             PrintGameInfo(Game);

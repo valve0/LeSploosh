@@ -43,7 +43,7 @@ namespace LeSploosh
             this.NumberOfTiles = mapSize * mapSize;
             this.ShotCounter = shotCounter;
 
-            var squidTuples = new (string, int, int)[]
+            (string name, int squidSize,  int noSquid)[] squidTuples =
             {
                 ("small", 1, noSmall),
                 ("medium", 2, noMedium),
@@ -97,7 +97,7 @@ namespace LeSploosh
 
 
 
-            PlaceSquids(squidTuples, Tiles);
+            //PlaceSquids(squidTuples, Tiles);
 
 
 
@@ -128,11 +128,11 @@ namespace LeSploosh
         }
 
 
-        internal void PlaceSquids(Tuples[] squidTuples, Tile[,] Tiles)
+        internal void PlaceSquids((string name, int squidSize, int noSquid)[] squidTuples, Tile[,] Tiles)
         {
             Random random = new Random();
 
-            foreach (squidTuple in squidTuples)
+            foreach (var squidTuple in squidTuples)
             {
 
                 bool squidPlaced = false;

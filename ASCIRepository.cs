@@ -28,17 +28,26 @@ namespace LeSploosh
             }
         }
 
-        public string[] LoadASCIFromFile(string fileName)
+        public StringBuilder LoadASCIFromFile(string fileName)
         {
             string path = $"{directory}{fileName}";
-            string[] ASCI = { };
+            //string ASCI = string.Empty;
+
+            StringBuilder ASCI = new StringBuilder();
 
             try
             {
                 CheckForExisitingASCIFile(fileName);
 
-                ASCI = File.ReadAllLines(path);
+                //ASCI = File.ReadAllLines(path);
       
+                foreach(string line in File.ReadAllLines(path))
+                {
+                    ASCI.AppendLine(line);
+                }
+
+
+
             }
             catch (FileNotFoundException fnfex)
             {
