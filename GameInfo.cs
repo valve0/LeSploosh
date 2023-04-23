@@ -21,77 +21,226 @@ namespace LeSploosh
         public int ShotCounter { get; set; }
 
         //private List<Tile> Tiles { get; set; }
-        public Tile[] Tiles { get; init; }
+        public Tile[,] Tiles { get; init; }
         private List<int> Squids { get; init; }
 
-        public GameInfo(int small, int medium, int large, int giant, int mapSize, int shotCounter)
+        public GameInfo(int noSmall, int noMedium, int noLarge, int noGiant, int mapSize, int shotCounter)
         {
-            Random random = new Random();
-            
-            this.NumSmallSquid = small;
-            this.NumMediumSquid = medium;
-            this.NumLargeSquid = large;
-            this.NumGiantSquid = giant;
+
+
+            //this.NumSmallSquid = small;
+            //var smallSquidTuple = Tuple.Create("small", 1, small);
+            //this.NumMediumSquid = medium;
+            //var mediumSquidTuple = Tuple.Create("medium", 2, medium);
+            //this.NumLargeSquid = large;
+            //var largeSquidTuple = Tuple.Create("large", 3, large);
+            //this.NumGiantSquid = giant;
+            //var giantSquidTuple = Tuple.Create("giant", 4, giant);
+
+            this.NumberOfSquid = noSmall + noMedium + noLarge + noGiant;
+            this.Tiles = new Tile[mapSize, mapSize]; //Create a 2d array of size mapsize
             this.Size = mapSize;
             this.NumberOfTiles = mapSize * mapSize;
             this.ShotCounter = shotCounter;
 
+            var squidTuples = new (string, int, int)[]
+            {
+                ("small", 1, noSmall),
+                ("medium", 2, noMedium),
+                ("large", 3, noLarge),
+                ("giant", 4, noGiant)
+            };
 
 
-            int[] squidNumbers = new int[4];
-            squidNumbers[0] = small;
-            squidNumbers[1] = medium;
-            squidNumbers[2] = large;
-            squidNumbers[3] = giant;
 
-            this.NumberOfSquid = NumSmallSquid + NumMediumSquid + NumLargeSquid + NumGiantSquid;
+            //squidTuples.Add(smallSquidTuple);
+            //squidTuples.Add(mediumSquidTuple);
+            //squidTuples.Add(largeSquidTuple);
+            //squidTuples.Add(giantSquidTuple);
+
+
+
+
+
+
+            //int[] squidNumbers = new int[4];
+            //squidNumbers[0] = small;
+            //squidNumbers[1] = medium;
+            //squidNumbers[2] = large;
+            //squidNumbers[3] = giant;
+
+            //this.NumberOfSquid = NumSmallSquid + NumMediumSquid + NumLargeSquid + NumGiantSquid;
+
+
+            // Create a list of tuples which stores the number and length of each squid 
 
             //this.Tiles = new List<Tile>();
-            this.Tiles = new Tile[NumberOfTiles];
-            this.Squids = new List<int>();
+            //this.Tiles = new Tile[NumberOfTiles];
+
+            //this.Squids = new List<int>();
 
 
             //Fill aray of tiles with new tiles, setting them to default start value
-            for (int i = 0; i < NumberOfTiles; i++) 
+            for (int row = 0; row < mapSize; row++) 
             {
-                //Fill list with default value of sea state
-                Tiles[i] = new Tile();
-            
+                for (int col = 0; col < mapSize; col++)
+                {
+                    //Fill list with default value of sea state
+                    Tiles[row,col] = new Tile();
+                }
             }
 
             //Set the first tile to have the crosshair to begin with.
-            Tiles[0].CrosshairBool = true;
+            Tiles[0,0].CrosshairBool = true;
             //first grid number is defeault start position for crosshair
             this.ActiveGridNumber = 0;
 
 
 
+            PlaceSquids(squidTuples, Tiles);
+
+
+
             //Placing the squids
 
-            //Loop through each group of squid starting with small
-            foreach ( int squid in squidNumbers)
-            {
+            ////Loop through each group of squid starting with small
+            //foreach ( int squid in squidNumbers)
+            //{
 
-                for (int i = 0; i< squid; i++)
-                {
+            //    for (int i = 0; i < squid; i++)
+            //    {
 
-                    bool squidPlaced = false;
-                    do // Keep looping until squid placed
-                    {
-                        int spot = random.Next(NumberOfTiles);
+            //        bool squidPlaced = false;
+            //        do // Keep looping until squid placed
+            //        {
+            //            int spot = random.Next(NumberOfTiles);
 
-                        //check to see if no squid already in this spot
-                        if (!Tiles[spot].SquidPresent)
-                        {
-                            Tiles[spot].SquidPresent = true;
-                            squidPlaced = true;
-                        }
+            //            //check to see if no squid already in this spot
+            //            if (!Tiles[spot].SquidPresent)
+            //            {
+            //                Tiles[spot].SquidPresent = true;
+            //                squidPlaced = true;
+            //            }
 
-                    } while (squidPlaced != true);
-                }
-            }
+            //        } while (squidPlaced != true);
+            //    }
+            //}
         }
 
+
+        internal void PlaceSquids(Tuples[] squidTuples, Tile[,] Tiles)
+        {
+            Random random = new Random();
+
+            foreach (squidTuple in squidTuples)
+            {
+
+                bool squidPlaced = false;
+
+                if (squidTuples.Item3)//For a given squid size there are squid
+                {
+                    do
+                    {
+
+                        //Loop through the number of squid for a given size
+                        foreach (squid in squidTuples.Item3)
+                        {
+                            bool allPartsPlaced = false;
+
+
+                            do
+                            {
+
+
+                                // Loop through the parts of the squid
+                                for (int i = 0; i < squidTuples.Item2; i++)
+                                {
+                                    if (i == 0)
+                                    {
+                                        //Choose a random spot to place the first part of the squid
+                                        firstPartPlaced = false;
+                                        do // Keep looping until squid placed
+                                        {
+                                            int startTile = random.Next(Tiles.Length);
+
+                                            //check to see if no squid already in this spot
+                                            if (!Tiles[startTile].SquidPresent)
+                                            {
+                                                Tiles[startTile].SquidPresent = true;
+                                                firstPartPlaced = true;
+                                            }
+
+                                        } while (firstPartPlaced == false);
+                                    }
+
+                                }   //Continue to place remaining parts of the squid
+
+
+
+
+                                //Try to place remaining parts of squid
+                                for (int i = 1; i < squidTuples.Item2; i++)
+                                {
+
+                                    //Chose a random direction (0 = up, 1 = right, 2 = down, 3 = left)
+                                    //Generate a rnadom number between 0 and 3 inclusive
+                                    var directions = new List<int>();
+                                    int direction = GetNewDirection(directions);
+                                    directions.Add(direction);
+
+                                    // Try to place remaining squid length in direction generated from placed startTile 
+                                    if (Tiles[startTile + direction].SquidPresent)
+
+
+
+                                }
+
+
+                                    
+                                    
+                                
+                                
+
+                            } while (allPartsPlaced == false);
+
+                        }
+
+
+
+
+
+
+
+
+                    } while (squidPlaced == false)
+
+
+
+
+                }
+
+
+            }
+
+        }
+
+
+
+        internal int GetNewDirection(List<int> directions)
+        {
+            
+            //Keep looping until a new direction has been generated.
+            do
+            {
+                int direction = Random.Next(4);
+
+            }while(directions.Contains(direction))
+
+            return direction;
+
+
+
+        }
 
         internal bool AttackCheck(int attackGridNumber)
         {

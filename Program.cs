@@ -10,10 +10,10 @@ internal class Program
     {
         PrintTerminal PrintTerminal = new();
 
-        //int origWidth = Console.WindowWidth;
-        //int origHeight = Console.WindowHeight;
+        int origWidth = Console.WindowWidth;
+        int origHeight = Console.WindowHeight;
 
-        //Console.SetWindowSize(120, 60);
+        //Console.SetWindowSize(120, 50);
 
 
         //%    Set up the game   %//
@@ -70,7 +70,7 @@ internal class Program
                         numMediumSquid = 1;
                         numLargeSquid = 1;
                         numGiantSquid = 1;
-                        shotCounter = 5;
+                        shotCounter = 24;
                         loop = false;
                         break;
                     }
