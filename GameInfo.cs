@@ -10,7 +10,7 @@ namespace LeSploosh
     internal class GameInfo
     {
         
-        public int ActiveGridNumber { get; set; }
+        public int[] ActiveGridNumber { get; set; }
         public int NumberOfSquid { get; set;}
         private int NumSmallSquid { get; init; }
         private int NumMediumSquid { get; init; }
@@ -24,7 +24,7 @@ namespace LeSploosh
         public Tile[,] Tiles { get; init; }
         private List<int> Squids { get; init; }
 
-        public GameInfo(int noSmall, int noMedium, int noLarge, int noGiant, int mapSize, int shotCounter)
+        public GameInfo(int noSmall, int noMedium, int noLarge, int noGiant, int mapSize, int shotCounter, string difficulty)
         {
 
 
@@ -93,11 +93,9 @@ namespace LeSploosh
             //Set the first tile to have the crosshair to begin with.
             Tiles[0,0].CrosshairBool = true;
             //first grid number is defeault start position for crosshair
-            this.ActiveGridNumber = 0;
+            this.ActiveGridNumber = new int[] { 0, 0 };
 
-
-
-            //PlaceSquids(squidTuples, Tiles);
+            PlaceSquids(squidTuples, Tiles, difficulty);
 
 
 
@@ -128,45 +126,49 @@ namespace LeSploosh
         }
 
 
-        internal void PlaceSquids((string name, int squidSize, int noSquid)[] squidTuples, Tile[,] Tiles)
+        internal void PlaceSquids((string name, int squidSize, int noSquid)[] squidTuples, Tile[,] Tiles, string difficulty)
         {
             Random random = new Random();
 
+            //Loop through array of tuples
             foreach (var squidTuple in squidTuples)
             {
+                //Initialise
+                bool allSquidPlaced = false;
+                int startTileRow = 0;
+                int startTileCol = 0;
+                int squidPlacedCounter = 0;
 
-                bool squidPlaced = false;
-
-                if (squidTuples.Item3)//For a given squid size there are squid
+                if (squidTuple.noSquid > 0)//If there are squid present for a given tuple
                 {
                     do
                     {
 
                         //Loop through the number of squid for a given size
-                        foreach (squid in squidTuples.Item3)
+                        for (int squidNo = 1; squidNo < squidTuple.noSquid + 1; squidNo++)
                         {
+                            //Initialise
                             bool allPartsPlaced = false;
-
 
                             do
                             {
-
-
-                                // Loop through the parts of the squid
-                                for (int i = 0; i < squidTuples.Item2; i++)
+                                // Loop through the parts for the given squid
+                                for (int i = 0; i < squidTuple.squidSize; i++)
                                 {
                                     if (i == 0)
                                     {
                                         //Choose a random spot to place the first part of the squid
-                                        firstPartPlaced = false;
+                                        bool firstPartPlaced = false;
+
                                         do // Keep looping until squid placed
                                         {
-                                            int startTile = random.Next(Tiles.Length);
+                                            startTileRow = random.Next(Size);
+                                            startTileCol = random.Next(Size);
 
                                             //check to see if no squid already in this spot
-                                            if (!Tiles[startTile].SquidPresent)
+                                            if (Tiles[startTileRow, startTileCol].SquidPresent == false)
                                             {
-                                                Tiles[startTile].SquidPresent = true;
+                                                Tiles[startTileRow, startTileCol].SquidPresent = true;
                                                 firstPartPlaced = true;
                                             }
 
@@ -175,50 +177,85 @@ namespace LeSploosh
 
                                 }   //Continue to place remaining parts of the squid
 
+                                //If you cant palce ther remaining parts of the squid currently redos the whole process from the top- needs optimising.
 
 
-
-                                //Try to place remaining parts of squid
-                                for (int i = 1; i < squidTuples.Item2; i++)
+                                //Try to place remaining parts of squid 
+                                for (int squidPart = 2; squidPart < squidTuple.squidSize + 1; squidPart++)
                                 {
-
-                                    //Chose a random direction (0 = up, 1 = right, 2 = down, 3 = left)
+                                    
+                                    
                                     //Generate a rnadom number between 0 and 3 inclusive
-                                    var directions = new List<int>();
-                                    int direction = GetNewDirection(directions);
-                                    directions.Add(direction);
+                                    //Chose a random direction (0 = up, 1 = right, 2 = down, 3 = left)
+                                    Random Random = new Random();
+                                    int direction = Random.Next(4);
+                                    int rowAdder = 0;
+                                    int colAdder = 0;
 
-                                    // Try to place remaining squid length in direction generated from placed startTile 
-                                    if (Tiles[startTile + direction].SquidPresent)
+                                    switch (direction)
+                                    {
+                                        case 0:
+                                            {
+                                                rowAdder = -1;
+                                                colAdder = 0;
+                                                break;
+                                            }
+                                            case 1:
+                                            {
+                                                rowAdder = 0;
+                                                colAdder = 1;
+                                                break;
+                                            }
+                                            case 2:
+                                            {
+                                                rowAdder = 1;
+                                                colAdder = 0;
+                                                break;
+                                            }
+                                            case 3:
+                                            {
+                                                rowAdder = 0;
+                                                colAdder = -1;
+                                                break;
+                                            }
+                                    }
 
+                                    if (startTileRow + rowAdder >= 0 && startTileCol + colAdder >= 0 && startTileRow + rowAdder < Size && startTileCol + colAdder < Size) //Make sure new grid reference is valid
+                                    {
 
+                                        //Check if space is free in the direction selected
+                                        if (Tiles[startTileRow + rowAdder, startTileCol + colAdder].SquidPresent == false)
+                                        {
+                                            //Set the selected row to have a squid part
+                                            Tiles[startTileRow + rowAdder, startTileCol + colAdder].SquidPresent = true;
 
+                                            //check to see if at end of loop and therefore last part of squid placed successfully
+                                            if (squidPart == squidTuple.squidSize)
+                                            {
+                                                //set flag to true
+                                                allPartsPlaced = true;
+                                            }
+
+                                        }
+                                    }
                                 }
 
+                                if (squidTuple.squidSize == 1)
+                                    allPartsPlaced = true;
 
-                                    
-                                    
-                                
-                                
+                                if (allPartsPlaced == true)
+                                    squidPlacedCounter++;
 
                             } while (allPartsPlaced == false);
 
                         }
 
+                        if (squidPlacedCounter == squidTuple.noSquid)
+                            allSquidPlaced = true;
 
-
-
-
-
-
-
-                    } while (squidPlaced == false)
-
-
-
+                    } while (allSquidPlaced == false);
 
                 }
-
 
             }
 
@@ -228,13 +265,16 @@ namespace LeSploosh
 
         internal int GetNewDirection(List<int> directions)
         {
-            
+            Random Random = new Random();
+
+            int direction;
+
             //Keep looping until a new direction has been generated.
             do
             {
-                int direction = Random.Next(4);
+                direction = Random.Next(4);
 
-            }while(directions.Contains(direction))
+            } while (directions.Contains(direction));
 
             return direction;
 
@@ -244,7 +284,7 @@ namespace LeSploosh
 
         internal bool AttackCheck(int attackGridNumber)
         {
-            if (Tiles[attackGridNumber].Attackable)
+            if (Tiles[ActiveGridNumber[0],ActiveGridNumber[1]].Attackable) 
             {
                 PrintTerminal.PrintLine("Valid Square to attack");
                 return true;
@@ -267,13 +307,18 @@ namespace LeSploosh
         public void MoveCursorUp()
         {
             //Check to see if not at top
-            if (ActiveGridNumber - Size >= 0 )
+            if (ActiveGridNumber[0] != 0)
             {
-                Tiles[ActiveGridNumber].CrosshairBool = false;
 
-                ActiveGridNumber = ActiveGridNumber - Size;
+                //Set current tile cross hair status to false
+                Tiles[ActiveGridNumber[0], ActiveGridNumber[1]].CrosshairBool = false;
 
-                Tiles[ActiveGridNumber].CrosshairBool = true;
+                //Move active grid number up a row
+                ActiveGridNumber[0]--;
+
+                //Update new tile cross hair status
+                //Set current tile cross hair status to false
+                Tiles[ActiveGridNumber[0], ActiveGridNumber[1]].CrosshairBool = true;
 
                 PrintTerminal.PrintGameInfo(this);
             }
@@ -282,13 +327,18 @@ namespace LeSploosh
         public void MoveCursorDown()
         {
             //Check to see if not at bottom
-            if (ActiveGridNumber + Size <= (Size * Size - 1))
+            if (ActiveGridNumber[0] != Size - 1)
             {
-                Tiles[ActiveGridNumber].CrosshairBool = false;
 
-                ActiveGridNumber = ActiveGridNumber + Size;
+                //Set current tile cross hair status to false
+                Tiles[ActiveGridNumber[0], ActiveGridNumber[1]].CrosshairBool = false;
 
-                Tiles[ActiveGridNumber].CrosshairBool = true;
+                //Move active grid number down a row
+                ActiveGridNumber[0]++;
+
+                //Update new tile cross hair status
+                //Set current tile cross hair status to false
+                Tiles[ActiveGridNumber[0], ActiveGridNumber[1]].CrosshairBool = true;
 
                 PrintTerminal.PrintGameInfo(this);
             }
@@ -297,13 +347,18 @@ namespace LeSploosh
         public void MoveCursorLeft()
         {
             //Check to see if not at far left
-            if (ActiveGridNumber % Size != 0)
+            if (ActiveGridNumber[1] != 0)
             {
-                Tiles[ActiveGridNumber].CrosshairBool = false;
 
-                ActiveGridNumber = ActiveGridNumber - 1;
+                //Set current tile cross hair status to false
+                Tiles[ActiveGridNumber[0], ActiveGridNumber[1]].CrosshairBool = false;
 
-                Tiles[ActiveGridNumber].CrosshairBool = true;
+                //Move active grid number down a column
+                ActiveGridNumber[1]--;
+
+                //Update new tile cross hair status
+                //Set current tile cross hair status to false
+                Tiles[ActiveGridNumber[0], ActiveGridNumber[1]].CrosshairBool = true;
 
                 PrintTerminal.PrintGameInfo(this);
             }
@@ -312,13 +367,18 @@ namespace LeSploosh
         public void MoveCursorRight()
         {
             //Check to see if not at far right
-            if (ActiveGridNumber % Size != (Size - 1))
+            if (ActiveGridNumber[1] != Size - 1)
             {
-                Tiles[ActiveGridNumber].CrosshairBool = false;
 
-                ActiveGridNumber = ActiveGridNumber + 1;
+                //Set current tile cross hair status to false
+                Tiles[ActiveGridNumber[0], ActiveGridNumber[1]].CrosshairBool = false;
 
-                Tiles[ActiveGridNumber].CrosshairBool = true;
+                //Move active grid number up a column
+                ActiveGridNumber[1]++;
+
+                //Update new tile cross hair status
+                //Set current tile cross hair status to false
+                Tiles[ActiveGridNumber[0], ActiveGridNumber[1]].CrosshairBool = true;
 
                 PrintTerminal.PrintGameInfo(this);
             }
@@ -328,9 +388,8 @@ namespace LeSploosh
 
         public bool Attack()
         {
-            int attackGridNumber = this.ActiveGridNumber;
 
-            if (!this.Tiles[attackGridNumber].Attackable)
+            if (!Tiles[ActiveGridNumber[0], ActiveGridNumber[1]].Attackable)
             {
                 PrintTerminal.PrintLine("Tile not attackable");
                 return false;
@@ -338,34 +397,35 @@ namespace LeSploosh
             }
 
             //Assumption that Attack Check is run before this method
-            if (this.Tiles[attackGridNumber].SquidPresent)
+            if (Tiles[ActiveGridNumber[0], ActiveGridNumber[1]].SquidPresent)
             {
                 //Loop through animation
                 foreach (TileState state in Animations.hit)
                 {
-                    PrintTerminal.AnimateTile(state, attackGridNumber, this);
+                    PrintTerminal.AnimateTile(state, ActiveGridNumber, this);
                 }
 
-                this.Tiles[attackGridNumber].Attackable = false;
+                this.Tiles[ActiveGridNumber[0], ActiveGridNumber[1]].Attackable = false;
                 this.ReduceShotCount();
                 this.ReduceSquidCount();
                 PrintTerminal.PrintLine("Squid Hit!");
                 return true;
             }
-            else if (!this.Tiles[attackGridNumber].SquidPresent)
+            else if (!Tiles[ActiveGridNumber[0], ActiveGridNumber[1]].SquidPresent)
             {
                 //Temporarly turn off Crosshair
-                this.Tiles[attackGridNumber].CrosshairBool = false;
+                Tiles[ActiveGridNumber[0], ActiveGridNumber[1]].CrosshairBool = false;
+
                 //Loop through animation
                 foreach (TileState state in Animations.miss)
                 {
-                    PrintTerminal.AnimateTile(state, attackGridNumber, this);
+                    PrintTerminal.AnimateTile(state, ActiveGridNumber, this);
                 }
                 //Turn crosshair back on
-                this.Tiles[attackGridNumber].CrosshairBool = true;
+                Tiles[ActiveGridNumber[0], ActiveGridNumber[1]].CrosshairBool = true;
 
                 //Set tile to not be attackable
-                this.Tiles[attackGridNumber].Attackable = false;
+                Tiles[ActiveGridNumber[0], ActiveGridNumber[1]].Attackable = false;
                 this.ReduceShotCount();
                 PrintTerminal.PrintLine("Miss");
                 return true;

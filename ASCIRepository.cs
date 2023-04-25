@@ -28,7 +28,7 @@ namespace LeSploosh
             }
         }
 
-        public StringBuilder LoadASCIFromFile(string fileName)
+        public string LoadASCIFromFile(string fileName)
         {
             string path = $"{directory}{fileName}";
             //string ASCI = string.Empty;
@@ -43,7 +43,8 @@ namespace LeSploosh
       
                 foreach(string line in File.ReadAllLines(path))
                 {
-                    ASCI.AppendLine(line);
+                    if(line != null)
+                        ASCI.AppendLine(line);
                 }
 
 
@@ -67,7 +68,7 @@ namespace LeSploosh
                 Console.ResetColor();
             }
 
-            return ASCI;
+            return ASCI.ToString();
 
         }
 

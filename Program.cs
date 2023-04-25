@@ -28,6 +28,8 @@ internal class Program
         //Four square sized squid
         int numGiantSquid = 0;
 
+        string difficulty;
+
         //Map size is a square of the int value i.e 3 = 3x3
         int mapSize = 0;
         int shotCounter = 0;
@@ -35,7 +37,7 @@ internal class Program
 
         do {
             PrintTerminal.PrintLine("Please select a diffulty (Easy/Medium/Hard)");
-            string difficulty = PrintTerminal.ReadLine();
+            difficulty = PrintTerminal.ReadLine();
 
             switch (difficulty)
             {
@@ -58,12 +60,12 @@ internal class Program
                         numMediumSquid = 1;
                         numLargeSquid = 0;
                         numGiantSquid = 0;
-                        shotCounter = 5;
+                        shotCounter = 18;
                         loop = false;
                         break;
                     }
 
-                case "Hard":
+                case "Hard":  // Offical difficulty
                     { 
                         mapSize = 8;
                         numSmallSquid = 0;
@@ -86,7 +88,7 @@ internal class Program
         //%    The Gameplay Loop   %//
         
 
-        GameInfo Game = new GameInfo(numSmallSquid, numMediumSquid, numLargeSquid, numGiantSquid, mapSize, shotCounter);
+        GameInfo Game = new GameInfo(numSmallSquid, numMediumSquid, numLargeSquid, numGiantSquid, mapSize, shotCounter, difficulty);
         string directory = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.Parent.FullName) + @"\LeSploosh\Text Files\";
         string winFile = directory + "YouWin.txt";
         string loseFile = directory + "YouLose.txt";
