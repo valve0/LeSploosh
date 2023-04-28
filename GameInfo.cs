@@ -24,18 +24,8 @@ namespace LeSploosh
         public Tile[,] Tiles { get; init; }
         private List<int> Squids { get; init; }
 
-        public GameInfo(int noSmall, int noMedium, int noLarge, int noGiant, int mapSize, int shotCounter, string difficulty)
+        public GameInfo(int noSmall, int noMedium, int noLarge, int noGiant, int mapSize, int shotCounter)
         {
-
-
-            //this.NumSmallSquid = small;
-            //var smallSquidTuple = Tuple.Create("small", 1, small);
-            //this.NumMediumSquid = medium;
-            //var mediumSquidTuple = Tuple.Create("medium", 2, medium);
-            //this.NumLargeSquid = large;
-            //var largeSquidTuple = Tuple.Create("large", 3, large);
-            //this.NumGiantSquid = giant;
-            //var giantSquidTuple = Tuple.Create("giant", 4, giant);
 
             this.NumberOfSquid = noSmall + noMedium + noLarge + noGiant;
             this.Tiles = new Tile[mapSize, mapSize]; //Create a 2d array of size mapsize
@@ -50,35 +40,6 @@ namespace LeSploosh
                 ("large", 3, noLarge),
                 ("giant", 4, noGiant)
             };
-
-
-
-            //squidTuples.Add(smallSquidTuple);
-            //squidTuples.Add(mediumSquidTuple);
-            //squidTuples.Add(largeSquidTuple);
-            //squidTuples.Add(giantSquidTuple);
-
-
-
-
-
-
-            //int[] squidNumbers = new int[4];
-            //squidNumbers[0] = small;
-            //squidNumbers[1] = medium;
-            //squidNumbers[2] = large;
-            //squidNumbers[3] = giant;
-
-            //this.NumberOfSquid = NumSmallSquid + NumMediumSquid + NumLargeSquid + NumGiantSquid;
-
-
-            // Create a list of tuples which stores the number and length of each squid 
-
-            //this.Tiles = new List<Tile>();
-            //this.Tiles = new Tile[NumberOfTiles];
-
-            //this.Squids = new List<int>();
-
 
             //Fill aray of tiles with new tiles, setting them to default start value
             for (int row = 0; row < mapSize; row++) 
@@ -95,38 +56,12 @@ namespace LeSploosh
             //first grid number is defeault start position for crosshair
             this.ActiveGridNumber = new int[] { 0, 0 };
 
-            PlaceSquids(squidTuples, Tiles, difficulty);
+            PlaceSquids(squidTuples, Tiles);
 
-
-
-            //Placing the squids
-
-            ////Loop through each group of squid starting with small
-            //foreach ( int squid in squidNumbers)
-            //{
-
-            //    for (int i = 0; i < squid; i++)
-            //    {
-
-            //        bool squidPlaced = false;
-            //        do // Keep looping until squid placed
-            //        {
-            //            int spot = random.Next(NumberOfTiles);
-
-            //            //check to see if no squid already in this spot
-            //            if (!Tiles[spot].SquidPresent)
-            //            {
-            //                Tiles[spot].SquidPresent = true;
-            //                squidPlaced = true;
-            //            }
-
-            //        } while (squidPlaced != true);
-            //    }
-            //}
         }
 
 
-        internal void PlaceSquids((string name, int squidSize, int noSquid)[] squidTuples, Tile[,] Tiles, string difficulty)
+        internal void PlaceSquids((string name, int squidSize, int noSquid)[] squidTuples, Tile[,] Tiles)
         {
             Random random = new Random();
 
@@ -286,11 +221,11 @@ namespace LeSploosh
         {
             if (Tiles[ActiveGridNumber[0],ActiveGridNumber[1]].Attackable) 
             {
-                PrintTerminal.PrintLine("Valid Square to attack");
+                PrintTerminal.PrintString("Valid Square to attack");
                 return true;
 
             }
-            PrintTerminal.PrintLine("Invalid square to attack");
+            PrintTerminal.PrintString("Invalid square to attack");
             return false;
         }
 
@@ -320,7 +255,7 @@ namespace LeSploosh
                 //Set current tile cross hair status to false
                 Tiles[ActiveGridNumber[0], ActiveGridNumber[1]].CrosshairBool = true;
 
-                PrintTerminal.PrintGameInfo(this);
+                PrintTerminal.PrintGameInfo(this, "");
             }
         }
 
@@ -340,7 +275,7 @@ namespace LeSploosh
                 //Set current tile cross hair status to false
                 Tiles[ActiveGridNumber[0], ActiveGridNumber[1]].CrosshairBool = true;
 
-                PrintTerminal.PrintGameInfo(this);
+                PrintTerminal.PrintGameInfo(this, "");
             }
         }
 
@@ -360,7 +295,7 @@ namespace LeSploosh
                 //Set current tile cross hair status to false
                 Tiles[ActiveGridNumber[0], ActiveGridNumber[1]].CrosshairBool = true;
 
-                PrintTerminal.PrintGameInfo(this);
+                PrintTerminal.PrintGameInfo(this, "");
             }
         }
 
@@ -380,7 +315,7 @@ namespace LeSploosh
                 //Set current tile cross hair status to false
                 Tiles[ActiveGridNumber[0], ActiveGridNumber[1]].CrosshairBool = true;
 
-                PrintTerminal.PrintGameInfo(this);
+                PrintTerminal.PrintGameInfo(this, "");
             }
         }
 
@@ -391,7 +326,7 @@ namespace LeSploosh
 
             if (!Tiles[ActiveGridNumber[0], ActiveGridNumber[1]].Attackable)
             {
-                PrintTerminal.PrintLine("Tile not attackable");
+                PrintTerminal.PrintString("Tile not attackable");
                 return false;
 
             }
@@ -408,7 +343,7 @@ namespace LeSploosh
                 this.Tiles[ActiveGridNumber[0], ActiveGridNumber[1]].Attackable = false;
                 this.ReduceShotCount();
                 this.ReduceSquidCount();
-                PrintTerminal.PrintLine("Squid Hit!");
+                PrintTerminal.PrintGameInfo(this, "Squid Hit!");
                 return true;
             }
             else if (!Tiles[ActiveGridNumber[0], ActiveGridNumber[1]].SquidPresent)
@@ -427,11 +362,13 @@ namespace LeSploosh
                 //Set tile to not be attackable
                 Tiles[ActiveGridNumber[0], ActiveGridNumber[1]].Attackable = false;
                 this.ReduceShotCount();
-                PrintTerminal.PrintLine("Miss");
+                PrintTerminal.PrintGameInfo(this, "Miss");
+
                 return true;
             }
 
-            PrintTerminal.PrintLine("ERROR");
+            PrintTerminal.PrintGameInfo(this, "");
+            PrintTerminal.PrintString("ERROR");
             return false;
 
         }

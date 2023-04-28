@@ -9,9 +9,9 @@ namespace LeSploosh
     internal class ASCIRepository
     {
 
-        static string directory = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.Parent.FullName) + @"\LeSploosh\Text Files\";
+        public static string directory = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.Parent.FullName) + @"\LeSploosh\Text Files\";
 
-        private void CheckForExisitingASCIFile(string fileName)
+        private static void CheckForExisitingASCIFile(string fileName)
         {
             string path = $"{directory}{fileName}";
 
@@ -28,7 +28,7 @@ namespace LeSploosh
             }
         }
 
-        public string LoadASCIFromFile(string fileName)
+        public static string LoadASCIFromFile(string fileName)
         {
             string path = $"{directory}{fileName}";
             //string ASCI = string.Empty;
@@ -53,15 +53,15 @@ namespace LeSploosh
             catch (FileNotFoundException fnfex)
             {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    PrintTerminal.PrintLine("The file couldn't be found!");
-                    PrintTerminal.PrintLine(fnfex.Message);
-                    PrintTerminal.PrintLine(fnfex.StackTrace);
+                    PrintTerminal.PrintString("The file couldn't be found!");
+                    PrintTerminal.PrintString(fnfex.Message);
+                    PrintTerminal.PrintString(fnfex.StackTrace);
             }
             catch (Exception ex)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                PrintTerminal.PrintLine("Something went wrong while loading the file!");
-                PrintTerminal.PrintLine(ex.Message);
+                PrintTerminal.PrintString("Something went wrong while loading the file!");
+                PrintTerminal.PrintString(ex.Message);
             }
             finally
             {

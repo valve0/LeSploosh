@@ -8,87 +8,31 @@ internal class Program
 {
     private static void Main(string[] args)
     {
+
+        //Makes Window holding Console full screen
+        DisplaySetup Display = new(); 
+         
         PrintTerminal PrintTerminal = new();
 
         int origWidth = Console.WindowWidth;
         int origHeight = Console.WindowHeight;
-
         //Console.SetWindowSize(120, 50);
 
 
         //%    Set up the game   %//
 
-        //intialise variables
-        //One square sized squid
+        //Setting up the variables for the game
+        int mapSize = 8;
         int numSmallSquid = 0;
-        //Two square sized squid
-        int numMediumSquid = 0;
-        // Three square sized squid
-        int numLargeSquid = 0;
-        //Four square sized squid
-        int numGiantSquid = 0;
-
-        string difficulty;
-
-        //Map size is a square of the int value i.e 3 = 3x3
-        int mapSize = 0;
-        int shotCounter = 0;
-        bool loop = true;
-
-        do {
-            PrintTerminal.PrintLine("Please select a diffulty (Easy/Medium/Hard)");
-            difficulty = PrintTerminal.ReadLine();
-
-            switch (difficulty)
-            {
-                case "Easy":
-                    {
-                        mapSize = 3;
-                        numSmallSquid = 3;
-                        numMediumSquid = 0;
-                        numLargeSquid = 0;
-                        numGiantSquid = 0;
-                        shotCounter = 5;
-                        loop = false;
-                        break;
-                    }
-
-                case "Medium":
-                    {
-                        mapSize = 4;
-                        numSmallSquid = 3;
-                        numMediumSquid = 1;
-                        numLargeSquid = 0;
-                        numGiantSquid = 0;
-                        shotCounter = 18;
-                        loop = false;
-                        break;
-                    }
-
-                case "Hard":  // Offical difficulty
-                    { 
-                        mapSize = 8;
-                        numSmallSquid = 0;
-                        numMediumSquid = 1;
-                        numLargeSquid = 1;
-                        numGiantSquid = 1;
-                        shotCounter = 24;
-                        loop = false;
-                        break;
-                    }
-
-                default:
-                    PrintTerminal.PrintLine("Please select a correct difficulty.");
-                    break;
-
-            }
-        } while (loop);
-
-
+        int numMediumSquid = 1;
+        int numLargeSquid = 1;
+        int numGiantSquid = 1;
+        int shotCounter = 24;
+ 
         //%    The Gameplay Loop   %//
-        
 
-        GameInfo Game = new GameInfo(numSmallSquid, numMediumSquid, numLargeSquid, numGiantSquid, mapSize, shotCounter, difficulty);
+
+        GameInfo Game = new GameInfo(numSmallSquid, numMediumSquid, numLargeSquid, numGiantSquid, mapSize, shotCounter);
         string directory = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.Parent.FullName) + @"\LeSploosh\Text Files\";
         string winFile = directory + "YouWin.txt";
         string loseFile = directory + "YouLose.txt";
@@ -98,7 +42,7 @@ internal class Program
         Console.Clear();
         //Load the static border files
         
-        PrintTerminal.PrintGameInfo(Game);
+        PrintTerminal.PrintGameInfo(Game, "");
         do
         {
            
@@ -134,11 +78,11 @@ internal class Program
 
         if (Game.ShotCounter == 0)
         {
-            PrintTerminal.PrintLine("You ran out of cannon balls!");
+            PrintTerminal.PrintString("You ran out of cannon balls!");
         }
         else
         {
-            PrintTerminal.PrintLine("There aren't enough cannon balls left to get them all!");
+            PrintTerminal.PrintString("There aren't enough cannon balls left to get them all!");
         }
 
         string endState = (Game.NumberOfSquid == 0) ? winFile : loseFile;
