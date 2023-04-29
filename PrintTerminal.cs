@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,7 +16,9 @@ namespace LeSploosh
         private static int txtFileLength = 3;
         private static int txtFileWidth = 8;
 
-        public static void PrintGameInfo(GameInfo GameInfo, string attackResult)
+        private static string directory = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.Parent.FullName) + @"\LeSploosh\Text Files\";
+
+        public static void PrintGameInfo(GameInfo GameInfo, string feedbackString)
         {
             Console.SetCursorPosition(0, 0);
 
@@ -105,7 +109,14 @@ namespace LeSploosh
             PrintString(shotsRemaining);
             PrintString(userInstructions);
             PrintString();
-            PrintString(attackResult);
+
+            //As we are not clearingt he screen after each print- we wnat to make sure this line gets cleared othersiwse it can remnain as a ghost
+            if (feedbackString == "")
+            {
+                feedbackString = "                    ";
+            }
+
+            PrintString(feedbackString);
 
             
             PrintString();
@@ -191,6 +202,49 @@ namespace LeSploosh
             Thread.Sleep(Animations.waitTime);
         }
 
+
+        public void PrintFail(int state)
+        {
+            
+            string loseFile = directory + "YouLose.txt";
+
+            Console.Clear();
+
+            PrintString(heightPadding);
+
+            PrintFile(loseFile);
+
+            switch (state)
+            {
+
+                case 1:
+                    PrintTerminal.PrintString("You ran out of cannon balls!");
+                    break;
+
+                case 2: 
+                    PrintTerminal.PrintString();
+                    break;
+
+            }
+
+
+        }
+
+        public void PrintWin()
+        {
+            string winFile = directory + "YouWin.txt";
+
+            PrintString(heightPadding);
+
+            Console.Clear();
+
+            PrintFile(winFile);
+
+           PrintTerminal.PrintString("You ran out of cannon balls!");
+        }
+
+
+        
 
     }
 }

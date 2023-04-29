@@ -5,6 +5,8 @@
 
         public TileState SeaState { get; set; }
 
+        private int[] tilePosition;
+
         private bool squidPresent;
         public bool SquidPresent { 
             get {return squidPresent; }
@@ -26,12 +28,13 @@
             set { squid = value; }
         }
 
-        public Tile ()
+        public Tile (int[] tilePosition)
         {
             this.SeaState = TileState.GameStart;
             this.SquidPresent = false;
             this.Attackable = true;
             this.CrosshairBool = false;
+            this.tilePosition = tilePosition;   
         }
 
 
@@ -40,7 +43,10 @@
             this.squid = squid;
 
             SquidPresent = true;
-        
+
+            squid.AddSquidPosition(this.tilePosition);
+
+
         }
 
         public string ReturnTileString()

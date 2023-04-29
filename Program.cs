@@ -24,9 +24,9 @@ internal class Program
         //Setting up the variables for the game
         int gridSize = 8;
         int numSmallSquid = 0;
-        int numMediumSquid = 1;
-        int numLargeSquid = 1;
-        int numGiantSquid = 1;
+        int numMediumSquid = 1; //1
+        int numLargeSquid = 1; //1
+        int numGiantSquid = 1; //1
         int shotCounter = 24;
  
         //%    The Gameplay Loop   %//
@@ -34,10 +34,14 @@ internal class Program
 
         GameInfo Game = new GameInfo(numSmallSquid, numMediumSquid, numLargeSquid, numGiantSquid, gridSize, shotCounter);
         string directory = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.Parent.FullName) + @"\LeSploosh\Text Files\";
-        string winFile = directory + "YouWin.txt";
-        string loseFile = directory + "YouLose.txt";
+
         int noSquidRemaining = Game.NumberOfSquid;
 
+
+        //Could do this better
+        int numberOfSquidParts = numSmallSquid * 1 + numMediumSquid * 2 + numLargeSquid * 3 + numGiantSquid * 4;
+
+        int gameState = 0;
         // The Game Loop
         Console.Clear();
         //Load the static border files
@@ -70,25 +74,46 @@ internal class Program
                     break;
             }
 
-        } while(Game.NumberOfSquid > 0 && Game.ShotCounter > 0);
+
+            //Win/Fail state check
+            if (Game.NumberOfSquid == 0)
+            {
+                //Win
+                gameState = 3;
+            }
+            else if(Game.ShotCounter == 0)
+            {
+                //Lose out of shots
+                gameState = 1;
+            }
+            else if (numberOfSquidParts > shotCounter)
+            {
+                //Lose not enough cannon balls
+                gameState = 2;
+            }
+
+        } while(gameState == 0);
 
         //%    End conditions   %//
 
         Console.Clear();
 
-        if (Game.ShotCounter == 0)
+        if (gameState == 1)
         {
-            PrintTerminal.PrintString("You ran out of cannon balls!");
+            //You ran out of cannon balls!
+            PrintTerminal.PrintFail(1);
+            
+        }
+        else if (gameState == 2)
+        {
+            //There aren't enough cannon balls left to get them all!
+            PrintTerminal.PrintFail(2);
+            
         }
         else
         {
-            PrintTerminal.PrintString("There aren't enough cannon balls left to get them all!");
+            PrintTerminal.PrintWin();
         }
 
-        string endState = (Game.NumberOfSquid == 0) ? winFile : loseFile;
-        PrintTerminal.PrintFile(endState);
-
-
-      
     }
 }

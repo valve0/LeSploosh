@@ -11,7 +11,7 @@ namespace LeSploosh
         
         public static TileState[] miss = { TileState.Miss1, TileState.Miss2, TileState.Miss1, TileState.GameMiss };
         public static TileState[] hit = { TileState.GameHit, TileState.GameStart, TileState.GameHit };
-        public static int waitTime = 800; //Time in millseconds between each state
+        public static int waitTime = 400; //Time in millseconds between each state
 
     }
 }
