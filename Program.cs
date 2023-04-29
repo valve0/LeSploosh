@@ -22,7 +22,7 @@ internal class Program
         //%    Set up the game   %//
 
         //Setting up the variables for the game
-        int mapSize = 8;
+        int gridSize = 8;
         int numSmallSquid = 0;
         int numMediumSquid = 1;
         int numLargeSquid = 1;
@@ -32,7 +32,7 @@ internal class Program
         //%    The Gameplay Loop   %//
 
 
-        GameInfo Game = new GameInfo(numSmallSquid, numMediumSquid, numLargeSquid, numGiantSquid, mapSize, shotCounter);
+        GameInfo Game = new GameInfo(numSmallSquid, numMediumSquid, numLargeSquid, numGiantSquid, gridSize, shotCounter);
         string directory = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.Parent.FullName) + @"\LeSploosh\Text Files\";
         string winFile = directory + "YouWin.txt";
         string loseFile = directory + "YouLose.txt";

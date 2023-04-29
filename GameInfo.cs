@@ -22,15 +22,23 @@ namespace LeSploosh
 
         //private List<Tile> Tiles { get; set; }
         public Tile[,] Tiles { get; init; }
-        private List<int> Squids { get; init; }
+        //private List<int> Squids { get; init; }
 
-        public GameInfo(int noSmall, int noMedium, int noLarge, int noGiant, int mapSize, int shotCounter)
+        public GameInfo(int noSmall, int noMedium, int noLarge, int noGiant, int gridSize, int shotCounter)
         {
 
             this.NumberOfSquid = noSmall + noMedium + noLarge + noGiant;
-            this.Tiles = new Tile[mapSize, mapSize]; //Create a 2d array of size mapsize
-            this.Size = mapSize;
-            this.NumberOfTiles = mapSize * mapSize;
+
+
+
+
+            
+            //Create an array of squids equal to the number of squids on the grid
+            ///Squid[] squids = new Squid[NumberOfSquid];
+
+            this.Tiles = new Tile[gridSize, gridSize]; //Create a 2d array of size mapsize
+            this.Size = gridSize;
+            this.NumberOfTiles = gridSize * gridSize;
             this.ShotCounter = shotCounter;
 
             (string name, int squidSize,  int noSquid)[] squidTuples =
@@ -42,9 +50,9 @@ namespace LeSploosh
             };
 
             //Fill aray of tiles with new tiles, setting them to default start value
-            for (int row = 0; row < mapSize; row++) 
+            for (int row = 0; row < gridSize; row++) 
             {
-                for (int col = 0; col < mapSize; col++)
+                for (int col = 0; col < gridSize; col++)
                 {
                     //Fill list with default value of sea state
                     Tiles[row,col] = new Tile();
@@ -56,18 +64,47 @@ namespace LeSploosh
             //first grid number is defeault start position for crosshair
             this.ActiveGridNumber = new int[] { 0, 0 };
 
-            PlaceSquids(squidTuples, Tiles);
+
+            //for (int i = 0; i < NumberOfSquid; i++)
+            //{
+            //    Squid[] squid
+
+
+            //}
+
+            Squid[] squids = new Squid[NumberOfSquid];
+
+            int squidCounter = 0;
+            foreach (var squidTuple in squidTuples)
+            {
+                for (int  i = 0; i < squidTuple.noSquid; i++)
+                {
+                    squids[squidCounter] = new Squid(squidTuple.squidSize);
+                    squidCounter++;
+                }
+
+                
+            
+            }
+
+
+                PlaceSquids(squidTuples, Tiles, squids);
 
         }
 
 
-        internal void PlaceSquids((string name, int squidSize, int noSquid)[] squidTuples, Tile[,] Tiles)
+        internal void PlaceSquids((string name, int squidSize, int noSquid)[] squidTuples, Tile[,] Tiles, Squid[] squids)
         {
             Random random = new Random();
+
+            //Used to loop through array of squids
+            int squidCounter = 0;
 
             //Loop through array of tuples
             foreach (var squidTuple in squidTuples)
             {
+                
+                 
                 //Initialise
                 bool allSquidPlaced = false;
                 int startTileRow = 0;
@@ -76,8 +113,31 @@ namespace LeSploosh
 
                 if (squidTuple.noSquid > 0)//If there are squid present for a given tuple
                 {
+                    
+
+
+
+                    // REDO THIS- LOOP THROUGH THE NUMBER OF SQUID PARTS, USE THE PART AS A REFERNCE TO BUILD THE COL ADSDER ASN ROW ADDER OFF OF- TOO COMPLICATED AT THEW MOMENT
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                  
                     do
                     {
+
+                        //Instanitate a squid of that size
+                        //string squidName = $"Squid{squidCounter}";
 
                         //Loop through the number of squid for a given size
                         for (int squidNo = 1; squidNo < squidTuple.noSquid + 1; squidNo++)
@@ -103,7 +163,10 @@ namespace LeSploosh
                                             //check to see if no squid already in this spot
                                             if (Tiles[startTileRow, startTileCol].SquidPresent == false)
                                             {
-                                                Tiles[startTileRow, startTileCol].SquidPresent = true;
+                                                //Assign the squid object into the tile  
+                                                Tiles[startTileRow, startTileCol].SetSquid(squids[squidCounter]);
+
+                                                //Tiles[startTileRow, startTileCol].SquidPresent = true;
                                                 firstPartPlaced = true;
                                             }
 
@@ -115,46 +178,49 @@ namespace LeSploosh
                                 //If you cant palce ther remaining parts of the squid currently redos the whole process from the top- needs optimising.
 
 
-                                //Try to place remaining parts of squid 
-                                for (int squidPart = 2; squidPart < squidTuple.squidSize + 1; squidPart++)
+                                //Generate a rnadom number between 0 and 3 inclusive
+                                //Chose a random direction (0 = up, 1 = right, 2 = down, 3 = left)
+                                Random Random = new Random();
+                                int direction = Random.Next(4);
+                                int rowAdder = 0;
+                                int colAdder = 0;
+
+                                switch (direction)
                                 {
-                                    
-                                    
-                                    //Generate a rnadom number between 0 and 3 inclusive
-                                    //Chose a random direction (0 = up, 1 = right, 2 = down, 3 = left)
-                                    Random Random = new Random();
-                                    int direction = Random.Next(4);
-                                    int rowAdder = 0;
-                                    int colAdder = 0;
+                                    case 0:
+                                        {
+                                            rowAdder = -1;
+                                            colAdder = 0;
+                                            break;
+                                        }
+                                    case 1:
+                                        {
+                                            rowAdder = 0;
+                                            colAdder = 1;
+                                            break;
+                                        }
+                                    case 2:
+                                        {
+                                            rowAdder = 1;
+                                            colAdder = 0;
+                                            break;
+                                        }
+                                    case 3:
+                                        {
+                                            rowAdder = 0;
+                                            colAdder = -1;
+                                            break;
+                                        }
+                                }
 
-                                    switch (direction)
-                                    {
-                                        case 0:
-                                            {
-                                                rowAdder = -1;
-                                                colAdder = 0;
-                                                break;
-                                            }
-                                            case 1:
-                                            {
-                                                rowAdder = 0;
-                                                colAdder = 1;
-                                                break;
-                                            }
-                                            case 2:
-                                            {
-                                                rowAdder = 1;
-                                                colAdder = 0;
-                                                break;
-                                            }
-                                            case 3:
-                                            {
-                                                rowAdder = 0;
-                                                colAdder = -1;
-                                                break;
-                                            }
-                                    }
 
+                                //Try to place remaining parts of squid 
+                                for (int squidPart = 1; squidPart < squidTuple.squidSize; squidPart++)
+                                {
+                                    // As the squid parts get longer you move furether away from starting Tile position
+                                    rowAdder += squidPart - 1; 
+                                    colAdder += squidPart - 1;
+                                    
                                     if (startTileRow + rowAdder >= 0 && startTileCol + colAdder >= 0 && startTileRow + rowAdder < Size && startTileCol + colAdder < Size) //Make sure new grid reference is valid
                                     {
 
@@ -162,7 +228,11 @@ namespace LeSploosh
                                         if (Tiles[startTileRow + rowAdder, startTileCol + colAdder].SquidPresent == false)
                                         {
                                             //Set the selected row to have a squid part
-                                            Tiles[startTileRow + rowAdder, startTileCol + colAdder].SquidPresent = true;
+                                            //Tiles[startTileRow + rowAdder, startTileCol + colAdder].SquidPresent = true;
+
+                                            //Add the same squid object into another adjacent tile
+                                            //Tiles[startTileRow + rowAdder, startTileCol + colAdder].Squid = squids[squidCounter];
+                                            Tiles[startTileRow + rowAdder, startTileCol + colAdder].SetSquid(squids[squidCounter]);
 
                                             //check to see if at end of loop and therefore last part of squid placed successfully
                                             if (squidPart == squidTuple.squidSize)
@@ -176,13 +246,14 @@ namespace LeSploosh
                                 }
 
                                 if (squidTuple.squidSize == 1)
-                                    allPartsPlaced = true;
+                                    allPartsPlaced = true; 
 
                                 if (allPartsPlaced == true)
                                     squidPlacedCounter++;
 
                             } while (allPartsPlaced == false);
 
+                            squidCounter++;
                         }
 
                         if (squidPlacedCounter == squidTuple.noSquid)
@@ -234,9 +305,10 @@ namespace LeSploosh
             ShotCounter--;
         }
 
-        public void ReduceSquidCount()
+        public void UpdateSquidCount(Tile tile)
         {
-            NumberOfSquid--;
+            if(tile.Squid.SquidStatus == false) // I.e if the squid is now dead
+                NumberOfSquid--;
         }
 
         public void MoveCursorUp()
@@ -342,7 +414,7 @@ namespace LeSploosh
 
                 this.Tiles[ActiveGridNumber[0], ActiveGridNumber[1]].Attackable = false;
                 this.ReduceShotCount();
-                this.ReduceSquidCount();
+                this.UpdateSquidCount(Tiles[ActiveGridNumber[0], ActiveGridNumber[1]]);
                 PrintTerminal.PrintGameInfo(this, "Squid Hit!");
                 return true;
             }

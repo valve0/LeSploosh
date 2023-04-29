@@ -8,22 +8,17 @@ namespace LeSploosh
 {
     internal class PrintTerminal
     {
-        private static string widthPadding = string.Concat(Enumerable.Repeat(" ",Console.LargestWindowWidth/2));
-        private static string heightPadding = string.Concat(Enumerable.Repeat($"\n", 10));
 
-        //Store constants textfile line length & width
+        //Store constants e.g. height padding, textfile line length & width
+        private static string heightPadding = string.Concat(Enumerable.Repeat($"\n", 10));
         private static int txtFileLength = 3;
         private static int txtFileWidth = 8;
 
         public static void PrintGameInfo(GameInfo GameInfo, string attackResult)
         {
             Console.SetCursorPosition(0, 0);
+
             //Load the static border files
-
-
-            
-            string padding = widthPadding;
-
             string borderVert = ASCIRepository.LoadASCIFromFile("BorderVert.txt").Replace("\r\n", string.Empty);
             string borderHor = ASCIRepository.LoadASCIFromFile("BorderHor.txt").Replace("\r\n", string.Empty);
             string frameEndL = ASCIRepository.LoadASCIFromFile("FrameEndL.txt").Replace("\r\n", string.Empty);
