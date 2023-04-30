@@ -3,11 +3,19 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Xml;
 using LeSploosh;
+using LeSploosh.Audio;
+using NAudio.Wave;
 
 internal class Program
 {
     private static void Main(string[] args)
     {
+
+
+
+        // later in the app...
+        
+        //AudioPlaybackEngine.Instance.PlaySound("crash.wav");
 
         //Makes Window holding Console full screen
         DisplaySetup Display = new(); 
@@ -20,6 +28,14 @@ internal class Program
 
 
         //%    Set up the game   %//
+
+        //Play background music
+        AudioPlaybackEngine.Instance.PlaySound("pirateship.mp3");
+
+        //Start Intro
+        PrintTerminal.PrintIntro();
+
+        
 
         //Setting up the variables for the game
         int gridSize = 8;
@@ -86,7 +102,7 @@ internal class Program
                 //Lose out of shots
                 gameState = 1;
             }
-            else if (numberOfSquidParts > shotCounter)
+            else if (numberOfSquidParts > Game.ShotCounter)
             {
                 //Lose not enough cannon balls
                 gameState = 2;
@@ -114,6 +130,9 @@ internal class Program
         {
             PrintTerminal.PrintWin();
         }
+
+        // on shutdown close audio engine
+        AudioPlaybackEngine.Instance.Dispose();
 
     }
 }

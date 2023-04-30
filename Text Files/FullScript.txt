@@ -1,0 +1,53 @@
+Hey. Welcome.
+
+It's 10 Rupees per game for kids. You wanna play or what?
+
+Response:
+Yeah
+No thanks
+
+Yeah, OK. Then, uh... AHEM!
+
+Velcome to zee fleet! I am zee greet admiral Dolvalski! Look sharp, for vee are zee sole protectors of zis island!
+
+Admiral! Red alert! All hands on deck!
+
+Sonar shows that schools of deadly giant squid are approaching! All ships prepare for battle!
+
+VAT?!? VERE?!!
+Ah! Hoo! I see Zee fiends approach!
+
+Zere are three squid groups: a large one, a medium one, und a small one! If vee allow zem to come any closer, zee children on zee island vill be in grave danger.
+
+Sailor! Take command of our new radar system to seek out and sink all of zese fiendishly hidden enemies!
+
+But be varned... you haff only 24 cannonballs zat you can fire.
+
+To destroy zee marauding squid pods, you must score four direct hits on zee large, three on zee medium und two on zee small!
+
+Use the 'Arrow keys' to move zee cursor und press 'Space' to fire a canaon blast! May your aim be true! Zat is all! Zat is all zee instruction you need!
+
+Is zat clear, sailor?
+
+Response:
+Aye-aye sir!
+What's going on...?
+
+Excellant so far our best sailor has managed to destroy all of zee giant squid using only {TopScore} cannonballs! May you fight as bravely!
+
+
+
+
+
+
+Win
+
+
+
+Excellant vork, sailor! Your deeds haff successfully protected zee peace on zis fair island! Vee are so very proud!
+
+
+So, uh, thanks for playing and all that. I can't tell you how fun it's been for me. And don't forget your umbrella or nothing on your way out the door.
+
+END
+

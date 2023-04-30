@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LeSploosh.Audio;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -206,6 +207,12 @@ namespace LeSploosh
                                                 firstPartPlaced = true;
 
                                                 squidPartPositions.Add(new int[] { startTileRow, startTileCol });
+
+
+                                                //Need to set this here as 
+                                                //Tiles[startTileRow, startTileCol].SquidPresent = true;
+
+
                                             }
 
                                         } while (firstPartPlaced == false);
@@ -246,7 +253,7 @@ namespace LeSploosh
                                                 allPartsPlaced = true;
 
                                                 //Instantiate squid object and assign to the locations defined
-                                                Squid squid = new Squid(squidTuple.squidSize);
+                                                Squid squid = new Squid(squidTuple.squidSize, squidPlacedCounter + 1);
 
                                                 //Add current squid to list of all squid positions
                                                 foreach (var positon in squidPartPositions)
@@ -323,6 +330,8 @@ namespace LeSploosh
                 Tiles[ActiveGridNumber[0], ActiveGridNumber[1]].CrosshairBool = true;
 
                 PrintTerminal.PrintGameInfo(this, "");
+
+                AudioPlaybackEngine.Instance.PlaySound("CursorMove.mp3");
             }
         }
 
@@ -343,6 +352,8 @@ namespace LeSploosh
                 Tiles[ActiveGridNumber[0], ActiveGridNumber[1]].CrosshairBool = true;
 
                 PrintTerminal.PrintGameInfo(this, "");
+
+                AudioPlaybackEngine.Instance.PlaySound("CursorMove.mp3");
             }
         }
 
@@ -363,6 +374,8 @@ namespace LeSploosh
                 Tiles[ActiveGridNumber[0], ActiveGridNumber[1]].CrosshairBool = true;
 
                 PrintTerminal.PrintGameInfo(this, "");
+
+                AudioPlaybackEngine.Instance.PlaySound("CursorMove.mp3");
             }
         }
 
@@ -383,6 +396,8 @@ namespace LeSploosh
                 Tiles[ActiveGridNumber[0], ActiveGridNumber[1]].CrosshairBool = true;
 
                 PrintTerminal.PrintGameInfo(this, "");
+
+                AudioPlaybackEngine.Instance.PlaySound("CursorMove.mp3");
             }
         }
 
@@ -401,6 +416,28 @@ namespace LeSploosh
             //Assumption that Attack Check is run before this method
             if (Tiles[ActiveGridNumber[0], ActiveGridNumber[1]].SquidPresent)
             {
+                int currentSquidCount = NumberOfSquid;
+                Tiles[ActiveGridNumber[0], ActiveGridNumber[1]].Squid.IncreaseHitCounter();
+                this.UpdateSquidCount(Tiles[ActiveGridNumber[0], ActiveGridNumber[1]]);
+                int newSquidCount = NumberOfSquid;
+
+                string message = string.Empty;
+
+                if (currentSquidCount == newSquidCount)
+                {
+                    AudioPlaybackEngine.Instance.PlaySound("kaboom.mp3");
+                    message = "Squid Hit!";
+                }
+                else
+                {
+                    AudioPlaybackEngine.Instance.PlaySound("SquidDead.mp3");
+                    message = "Squid Killed!";
+
+                }
+                    
+
+
+                Thread.Sleep(100);
                 //Loop through animation
                 foreach (TileState state in Animations.hit)
                 {
@@ -409,14 +446,19 @@ namespace LeSploosh
 
                 this.Tiles[ActiveGridNumber[0], ActiveGridNumber[1]].Attackable = false;
 
-                Tiles[ActiveGridNumber[0], ActiveGridNumber[1]].Squid.IncreaseHitCounter();
+                
                 this.ReduceShotCount();
-                this.UpdateSquidCount(Tiles[ActiveGridNumber[0], ActiveGridNumber[1]]);
-                PrintTerminal.PrintGameInfo(this, "Squid Hit!");
+                
+                PrintTerminal.PrintGameInfo(this, message);
+
                 return true;
             }
             else if (!Tiles[ActiveGridNumber[0], ActiveGridNumber[1]].SquidPresent)
             {
+                
+                AudioPlaybackEngine.Instance.PlaySound("sploosh.mp3");
+                Thread.Sleep(100);
+
                 //Temporarly turn off Crosshair
                 Tiles[ActiveGridNumber[0], ActiveGridNumber[1]].CrosshairBool = false;
 
@@ -432,6 +474,7 @@ namespace LeSploosh
                 Tiles[ActiveGridNumber[0], ActiveGridNumber[1]].Attackable = false;
                 this.ReduceShotCount();
                 PrintTerminal.PrintGameInfo(this, "Miss");
+                
 
                 return true;
             }

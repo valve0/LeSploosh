@@ -4,6 +4,18 @@ namespace LeSploosh;
 public class Squid
 {
 
+	private int id;
+	public int Id
+	{
+
+		get { return id; }
+
+		set
+		{
+			id = value;
+		}
+	}
+
     public int Size { get; set; }
 
     public int HitCounter { get; set; }
@@ -26,10 +38,12 @@ public class Squid
 	
 	}
 
-    public Squid(int size)
+    public Squid(int size, int id)
 	{
 		Size = size;
 		squidStatus = true; //default to true i.e alive
+		Id = id;
+
 	
 	}
 
