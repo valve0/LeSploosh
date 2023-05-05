@@ -51,7 +51,7 @@
 
         public string ReturnTileString()
         {
-            ASCIRepository ASCIRepository = new();
+            TextFileRepository TextFileRepository = new();
             string fileName = string.Empty;
 
             if (this.CrosshairBool == true)
@@ -75,9 +75,11 @@
                 fileName = $"{this.SeaState}.txt";
             }
 
-            string str = ASCIRepository.LoadASCIFromFile(fileName);
+            string str = TextFileRepository.LoadStringFromFile(fileName);
             return str;
         }
+
+
 
 
 

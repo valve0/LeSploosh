@@ -11,128 +11,108 @@ internal class Program
     private static void Main(string[] args)
     {
 
-
+        Console.BackgroundColor = ConsoleColor.Blue;
+        Console.Clear();
 
         // later in the app...
-        
+
         //AudioPlaybackEngine.Instance.PlaySound("crash.wav");
 
         //Makes Window holding Console full screen
-        DisplaySetup Display = new(); 
-         
+        DisplaySetup Display = new();
+
+        //Create PrintTerminal object-necesssray if all static?
         PrintTerminal PrintTerminal = new();
 
-        int origWidth = Console.WindowWidth;
-        int origHeight = Console.WindowHeight;
-        //Console.SetWindowSize(120, 50);
 
+        //Console.BackgroundColor = ConsoleColor.Blue;
+        //Console.Clear();
 
         //%    Set up the game   %//
+
+        //Play Intro
+
+        bool introPlayed = true;
+        bool playAgain = false;
 
         //Play background music
         AudioPlaybackEngine.Instance.PlaySound("pirateship.mp3");
 
-        //Start Intro
-        PrintTerminal.PrintIntro();
-
-        
-
-        //Setting up the variables for the game
-        int gridSize = 8;
-        int numSmallSquid = 0;
-        int numMediumSquid = 1; //1
-        int numLargeSquid = 1; //1
-        int numGiantSquid = 1; //1
-        int shotCounter = 24;
- 
-        //%    The Gameplay Loop   %//
-
-
-        GameInfo Game = new GameInfo(numSmallSquid, numMediumSquid, numLargeSquid, numGiantSquid, gridSize, shotCounter);
-        string directory = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.Parent.FullName) + @"\LeSploosh\Text Files\";
-
-        int noSquidRemaining = Game.NumberOfSquid;
-
-
-        //Could do this better
-        int numberOfSquidParts = numSmallSquid * 1 + numMediumSquid * 2 + numLargeSquid * 3 + numGiantSquid * 4;
-
-        int gameState = 0;
-        // The Game Loop
-        Console.Clear();
-        //Load the static border files
-        
-        PrintTerminal.PrintGameInfo(Game, "");
         do
         {
-           
-            var ch = Console.ReadKey(false).Key;
 
-            switch (ch)
+            //Setting up the variables for the game
+            int gridSize = 8;
+            int totalShots = 24;
+
+
+            (string name, int squidSize, int noSquid)[] squidTuples = new (string name, int squidSize, int noSquid)[]
             {
-                case ConsoleKey.Spacebar:
-                    Game.Attack();
-                    break;
-                case ConsoleKey.UpArrow:
-                    Game.MoveCursorUp();
-                    break;
-                case ConsoleKey.DownArrow:
-                    Game.MoveCursorDown();
-                    break;
-                case ConsoleKey.LeftArrow:
-                    Game.MoveCursorLeft();
-                    break;
-                case ConsoleKey.RightArrow:
-                    Game.MoveCursorRight();
-                    break;
-                default:
-                    //Invalid selection: do nothing
-                    break;
-            }
+                ("small", 1, 0),
+                ("medium", 2, 1),
+                ("large", 3, 1),
+                ("giant", 4, 1)
+            };
+
+            GameInfo Game = new GameInfo(squidTuples, gridSize, totalShots);
 
 
-            //Win/Fail state check
-            if (Game.NumberOfSquid == 0)
-            {
-                //Win
-                gameState = 3;
-            }
-            else if(Game.ShotCounter == 0)
-            {
-                //Lose out of shots
-                gameState = 1;
-            }
-            else if (numberOfSquidParts > Game.ShotCounter)
-            {
-                //Lose not enough cannon balls
-                gameState = 2;
-            }
+            //string directory = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.Parent.FullName) + @"\LeSploosh\Text Files\";
 
-        } while(gameState == 0);
 
-        //%    End conditions   %//
+            //Console.BackgroundColor = ConsoleColor.Blue;
+            //Console.Clear();
 
-        Console.Clear();
+            //if (introPlayed == false)
+            //    Game.PrintIntro();
+            //Console.BackgroundColor = ConsoleColor.Blue;
+            ////Console.Clear();
 
-        if (gameState == 1)
-        {
-            //You ran out of cannon balls!
-            PrintTerminal.PrintFail(1);
             
-        }
-        else if (gameState == 2)
-        {
-            //There aren't enough cannon balls left to get them all!
-            PrintTerminal.PrintFail(2);
-            
-        }
-        else
-        {
-            PrintTerminal.PrintWin();
-        }
 
-        // on shutdown close audio engine
-        AudioPlaybackEngine.Instance.Dispose();
+            //%    The Gameplay Loop   %//
+
+
+            while (Game.GameState == 0)
+            {
+                Game.PrintGameInfo();
+                var key = Console.ReadKey(false).Key;
+
+                switch (key)
+                {
+                    case ConsoleKey.Spacebar:
+                        Game.Attack();
+                        break;
+
+                    case ConsoleKey.UpArrow:
+                    case ConsoleKey.DownArrow:
+                    case ConsoleKey.LeftArrow:
+                    case ConsoleKey.RightArrow:
+                        Game.MoveCursor(key);
+                        break;
+
+                    default:
+                        //Invalid selection: do nothing
+                        break;
+                }
+
+                Game.UpdateGameState();
+
+            }
+
+            //%    End conditions   %//
+            //gameComplete = true;
+
+            Game.Ending();
+
+            playAgain = PrintTerminal.PlayAgain();
+            Console.BackgroundColor = ConsoleColor.Blue;
+            Console.Clear();
+
+        } while (playAgain == true);
+
+        PrintTerminal.PrintGoodBye();
 
     }
+
 }

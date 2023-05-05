@@ -3,66 +3,37 @@ namespace LeSploosh;
 
 public class Squid
 {
-
-	private int id;
-	public int Id
-	{
-
-		get { return id; }
-
-		set
-		{
-			id = value;
-		}
-	}
+	public int Id { get; set; }
 
     public int Size { get; set; }
 
     public int HitCounter { get; set; }
 
-	private List<int[]> squidPositions = new List<int[]>();
+    public bool SquidStatus { get; set; } //True = alive, false = dead
 
-	// true = alive, false = dead.
-	private bool squidStatus;
-	public bool SquidStatus { 
-		
-		get{ return squidStatus; }
-		
-		set
-		{
-			if (HitCounter == Size)
-				squidStatus = false;
-			else
-				squidStatus = true;
-		}
-	
-	}
+    private List<int[]> squidPositions;
 
-    public Squid(int size, int id)
-	{
-		Size = size;
-		squidStatus = true; //default to true i.e alive
-		Id = id;
+    public Squid() {
 
-	
-	}
+        squidPositions = new List<int[]>();
+
+    }
+
 
 	public void IncreaseHitCounter() 
 	{
 		this.HitCounter++;
 
         if (HitCounter == Size)
-            this.squidStatus = false;
+            SquidStatus = false;
         else
-            this.squidStatus = true;
+            SquidStatus = true;
     }
 
 
-	public void AddSquidPosition(int[] squidPosition)
-	{
-		squidPositions.Add(squidPosition);
+    public void AddSquidPosition(int[] squidPosition)
+    {
+        squidPositions.Add(squidPosition);
     }
-
-
 
 }

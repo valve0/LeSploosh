@@ -21,11 +21,12 @@ namespace LeSploosh
         private const int RESTORE = 9;
 
         public DisplaySetup()
-        {
-            Console.BackgroundColor = ConsoleColor.Blue;
-            Console.Clear();
+        {       
+            
             Console.SetWindowSize(Console.LargestWindowWidth, Console.LargestWindowHeight);
             ShowWindow(ThisConsole, MAXIMIZE);
+            Console.BackgroundColor = ConsoleColor.Blue;
+            Console.Clear();
         }
     }
 }
