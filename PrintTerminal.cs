@@ -15,53 +15,27 @@ namespace LeSploosh
     internal class PrintTerminal
     {
 
+        //private static int textFileLength = 3;
+
+
         private static string directory = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.Parent.FullName) + @"\LeSploosh\Text Files\";
 
-        public static void PrintString(string line, string color, string position) //Overloaded constructor with no color argument
+        public static void PrintFile(string file, float verticalAlignment = 0.5f, string color = "w", int cursorTop = -1)
         {
 
-            //Set the color of the font
-            switch (color.ToLower())
-            {
-                case "b":
-                    Console.ForegroundColor = ConsoleColor.Blue;
-                    break;
+            file = directory + file;
+            string printString = File.ReadAllText(file);
 
-                case "r":
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    break;
-
-                case "g":
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    break;
-
-                case "w":
-                    Console.ForegroundColor = ConsoleColor.White;
-                    Console.BackgroundColor = ConsoleColor.Blue;
-                    break;
-
-            }
-
-            //Get position adjuster value based on position required
-            float positionAdjuster = ReturnPositionAdjuster(position);
-            
-            // Center the output of the string
-            Console.SetCursorPosition((int)((Console.WindowWidth * positionAdjuster) - line.Length / 2), Console.CursorTop);
-            var test = Console.GetCursorPosition();
- 
-            //Console.SetCursorPosition((int)((Console.WindowWidth * positionAdjuster) - line.Length / 2), Console.CursorTop);
-            //Print the line
-            Console.WriteLine(line);
-
-            //Return deafult color of console
-            //Console.ForegroundColor = ConsoleColor.Blue;
-
+            PrintTerminal.PrintString(printString, verticalAlignment, color);
 
         }
 
-
-        public static void PrintString(string line, string color, string position, int longestLineLength) //Overloaded constructor with no color argument
+        public static void PrintString(string stringToPrint, float verticalAlignment = 0.5f, string color = "w", int cursorTop = -1)
         {
+
+            //Cannot set the default values be Console.Cursor Top at compile time
+            if (cursorTop == -1)
+                cursorTop = Console.CursorTop;
 
             //Set the color of the font
             switch (color.ToLower())
@@ -85,20 +59,31 @@ namespace LeSploosh
 
             }
 
-            //Get position adjuster value based on position required
-            float positionAdjuster = ReturnPositionAdjuster(position);
+            //string printString = File.ReadAllText(stringToPrint);
+            using (StringReader reader = new StringReader(stringToPrint))
+            {
+                string line = string.Empty;
+                do
+                {
+                    line = reader.ReadLine();
+                    if (line != null)
+                    {
 
-            // Center the output of the string
-            Console.SetCursorPosition((int)((Console.WindowWidth * positionAdjuster) - longestLineLength / 2), Console.CursorTop);
-            var test = Console.GetCursorPosition();
+                        // Center the output of the string
+                        Console.SetCursorPosition((int)((Console.WindowWidth * verticalAlignment) - line.Length / 2), cursorTop);
 
-            //Console.SetCursorPosition((int)((Console.WindowWidth * positionAdjuster) - line.Length / 2), Console.CursorTop);
-            //Print the line
-            Console.WriteLine(line);
+                        // Center the output of the string using longest line method
+                        //Console.SetCursorPosition((int)((Console.WindowWidth * verticalAlignmentAdjuster) - longestLineLength / 2), Console.CursorTop);
 
-            //Return deafult color of console
-            Console.ForegroundColor = ConsoleColor.Blue;
+                        //Print the line
+                        Console.WriteLine(line);
 
+                        //Update new cursor position with cursor now
+                        cursorTop = Console.CursorTop;
+                    }
+
+                } while (line != null);
+            }
 
         }
 
@@ -107,7 +92,7 @@ namespace LeSploosh
         public static int ReturnLongestLineLength(string printString)
         {
             int longestLineLength = 0;
-            
+
             using (StringReader reader = new StringReader(printString))
             {
                 string line;
@@ -121,96 +106,27 @@ namespace LeSploosh
             return longestLineLength;
         }
 
-
         //Overloaded for no input i.e new line
         public static void PrintString()
-        { 
+        {
             Console.WriteLine();
             Console.CursorVisible = false;
         }
 
 
-        public static void PrintFile(string file, string color, string position)
-        {
-            float positionAdjuster = ReturnPositionAdjuster(position);
-
-            file = directory + file;
-            string printString = File.ReadAllText(file);
-            using (StringReader reader = new StringReader(printString))
-            {
-                string line = string.Empty;
-                do
-                {
-                    line = reader.ReadLine();
-                    if (line != null)
-                    {
-                     
-                        PrintTerminal.PrintString(line, color, position);
-                    }
-                } while (line != null);
-            }
-
-        }
-
-
-        private static float ReturnPositionAdjuster(string position)
-        {
-            switch (position.ToLower())
-            {
-                case "c": //Center
-                    {
-                        return 0.5f;
-                    }
-
-                case "l":
-                    {
-                        return 0.33f;                      
-                    }
-
-                case "lc":
-                    {
-                        return 0.40f;
-                    }
-
-                case "llc":
-                    {
-                        return 0.37f;
-                    }
-                case "lllc":
-                    {
-                        return 0.34f;
-                    }
-
-                case "r":
-                    {
-                        return 0.66f;                     
-                    }
-                case "rc":
-                    {
-                        return 0.66f;
-                    }
-                default:
-                    {
-                        return 2;                       
-                    }
-            }
-        }
-
-
-        public static bool MakeSelection(string leftSelected, string rightSelected, string color, string position)
+        public static bool PrintSelection(string leftSelected, string rightSelected, float verticalAlignment = 0.5f, string color = "w", int cursorTop = -1)
         {
             //Check currently selected box
             int txtFileHeight = 4;
             bool selection = true; // default to true as arrow starts on the left
-            PrintTerminal.PrintString("[Use Arrow Keys to move cursor and space to make selection]", color, position);
+            PrintTerminal.PrintString("[Use Arrow Keys to move cursor and space to make selection]", verticalAlignment: verticalAlignment, color: color, cursorTop: cursorTop);
 
-            PrintFile(leftSelected, "w", position);
+            PrintFile(leftSelected, verticalAlignment: verticalAlignment);
             do
             {
-                var test2 = Console.GetCursorPosition();
-                
+
                 var ch = Console.ReadKey(false).Key;
-  
+
                 switch (ch)
                 {
                     case ConsoleKey.Spacebar:
@@ -218,46 +134,70 @@ namespace LeSploosh
 
                     case ConsoleKey.LeftArrow:
                         selection = true;
-                        //Move curosr back up thew height of the slection boxes so it can reprint over them                      
-                        Console.SetCursorPosition(Console.CursorLeft, Console.CursorTop - txtFileHeight);
-                        PrintFile(leftSelected, "w", position);
+                        //Move curosr back up thew height of the slection boxes and reprint over them                      
+                        PrintFile(file: leftSelected, color: color, verticalAlignment: verticalAlignment, cursorTop: Console.CursorTop - txtFileHeight);
                         break;
 
                     case ConsoleKey.RightArrow:
                         selection = false;
-                        Console.SetCursorPosition(Console.CursorLeft, Console.CursorTop - txtFileHeight);
-                        PrintFile(rightSelected, "w", position);
+                        PrintFile(file: rightSelected, color: color, verticalAlignment: verticalAlignment, cursorTop: Console.CursorTop - txtFileHeight);
                         break;
                     default:
                         //Invalid key inputted: do nothing
                         break;
                 }
             } while (true); //Loop forever until selection made
-
-            
         }
 
-        public static void PrintGoodBye()
+
+        public static string ReturnStringsSideBySide(List<string> listOfStrings)
         {
-            Console.Clear();
-            //Console.BackgroundColor = ConsoleColor.Blue;
+            int txtFileLength = listOfStrings[0].Split('\n').Length;
 
-            //Print salvatore on the right
-            PrintTerminal.PrintFile("Salvatore.txt", "w", "r");
+            string[] stringRows = new string[txtFileLength];
 
-            // Move cursor down a little from top (padding)
-            Console.SetCursorPosition(0, 5);
 
-            PrintTerminal.PrintFile("QuitScript.txt", "w", "l");
+            //Go through each string get the approriate striung line and add to the array.
+            for (int i = 0; i < stringRows.Length; i++)
+            {
+                foreach (string s in listOfStrings)
+                {
 
-        }
+                    using (StringReader reader = new StringReader(s))
+                    {
+                        string line = string.Empty;
+                        int lineNumber = 0;
 
-        public static bool PlayAgain()
-        {
+                        do
+                        {
+                            line = reader.ReadLine();
 
-            PrintTerminal.PrintString("Would you like to play again?", "w", "l");
+                            if (lineNumber == i)
+                            {
+                                // do something with the line
+                                stringRows[i] = (stringRows[i] + line).Replace("\r\n", string.Empty);
 
-            return PrintTerminal.MakeSelection("PlayAgainL.txt", "PlayAgainR.txt", "w", "l");
+                            }
+                            lineNumber++;
+
+                        } while (line != null);
+
+                    }
+                }
+
+
+            }
+
+            StringBuilder sb = new StringBuilder();
+
+            foreach (string s in stringRows)
+            {
+                sb.AppendLine(s);
+            }
+
+            return sb.ToString();
+
+
         }
 
     }

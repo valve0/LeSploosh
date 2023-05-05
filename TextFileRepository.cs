@@ -31,7 +31,7 @@ namespace LeSploosh
 
                     }
                 }
-
+                
 
             }
             catch (FileNotFoundException fnfex)
@@ -52,7 +52,7 @@ namespace LeSploosh
                 Console.ResetColor();
             }
 
-            return stringBuilder.ToString();
+            return stringBuilder.ToString().TrimEnd('\r', '\n');
 
         }
 

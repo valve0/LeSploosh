@@ -103,15 +103,23 @@ internal class Program
             //%    End conditions   %//
             //gameComplete = true;
 
-            Game.Ending();
+            playAgain = Game.Ending();
 
-            playAgain = PrintTerminal.PlayAgain();
             Console.BackgroundColor = ConsoleColor.Blue;
             Console.Clear();
 
         } while (playAgain == true);
 
-        PrintTerminal.PrintGoodBye();
+        Console.Clear();
+        //Console.BackgroundColor = ConsoleColor.Blue;
+
+        //Print salvatore on the right
+        PrintTerminal.PrintFile("Salvatore.txt", 0.66f);
+
+        // Move cursor down a little from top (padding)
+        Console.SetCursorPosition(0, 5);
+
+        PrintTerminal.PrintFile("QuitScript.txt", 0.33f);
 
     }
 
