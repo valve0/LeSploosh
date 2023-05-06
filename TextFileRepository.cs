@@ -32,7 +32,6 @@ namespace LeSploosh
                     }
                 }
                 
-
             }
             catch (FileNotFoundException fnfex)
             {
@@ -64,6 +63,13 @@ namespace LeSploosh
             File.WriteAllText(path, stringToWrite);
         }
 
+
+        public static int GetNumberOfLinesFile(string fileName)
+        {
+            string stringToCount = LoadStringFromFile(fileName);
+
+            return stringToCount.Split('\n').Count();
+        }
 
     }
 }

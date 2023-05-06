@@ -23,10 +23,13 @@ namespace LeSploosh
         public static void PrintFile(string file, float verticalAlignment = 0.5f, string color = "w", int cursorTop = -1)
         {
 
-            file = directory + file;
-            string printString = File.ReadAllText(file);
+            //file = directory + file;
+            //string printString = File.ReadAllText(file);
 
-            PrintTerminal.PrintString(printString, verticalAlignment, color);
+            string printString = TextFileRepository.LoadStringFromFile(file);
+            int len = printString.Length;
+
+            PrintTerminal.PrintString(printString, verticalAlignment, color, cursorTop);
 
         }
 
@@ -70,10 +73,10 @@ namespace LeSploosh
                     {
 
                         // Center the output of the string
-                        Console.SetCursorPosition((int)((Console.WindowWidth * verticalAlignment) - line.Length / 2), cursorTop);
+                        Console.SetCursorPosition((int)((Console.WindowWidth * verticalAlignment) -  line.Length/ 2), cursorTop);
 
                         // Center the output of the string using longest line method
-                        //Console.SetCursorPosition((int)((Console.WindowWidth * verticalAlignmentAdjuster) - longestLineLength / 2), Console.CursorTop);
+                        //Console.SetCursorPosition((int)((Console.WindowWidth * verticalAlignmentAdjuster) - LongestLineLength(stringToPrint) / 2), Console.CursorTop);
 
                         //Print the line
                         Console.WriteLine(line);
@@ -87,9 +90,8 @@ namespace LeSploosh
 
         }
 
-
         //Necssary as some files are over multiple lines so string.length would not retrieve the longest line
-        public static int ReturnLongestLineLength(string printString)
+        public static int LongestLineLength(string printString)
         {
             int longestLineLength = 0;
 
@@ -114,14 +116,22 @@ namespace LeSploosh
         }
 
 
-        public static bool PrintSelection(string leftSelected, string rightSelected, float verticalAlignment = 0.5f, string color = "w", int cursorTop = -1)
+        public static bool PrintSelection(string leftSelected, string rightSelected, float verticalAlignment, string color = "w", int cursorTop = -1)
         {
-            //Check currently selected box
-            int txtFileHeight = 4;
-            bool selection = true; // default to true as arrow starts on the left
-            PrintTerminal.PrintString("[Use Arrow Keys to move cursor and space to make selection]", verticalAlignment: verticalAlignment, color: color, cursorTop: cursorTop);
+            //Cannot set the default values be Console.Cursor Top at compile time
+            if (cursorTop == -1)
+                cursorTop = Console.CursorTop;
 
-            PrintFile(leftSelected, verticalAlignment: verticalAlignment);
+            //NEEDED?
+            //Check currently selected box
+            int txtFileHeight = TextFileRepository.GetNumberOfLinesFile(leftSelected);
+
+            bool selection = true; // default to true as arrow starts on the left
+            //PrintTerminal.PrintString("[Use Arrow Keys to move cursor and space to make selection]", verticalAlignment: verticalAlignment, color: color, cursorTop: cursorTop);
+
+            //GameInfo.GetSelection(leftSelected, rightSelected, verticalAlignment, cursorTop, color);
+
+            PrintFile(leftSelected, verticalAlignment: verticalAlignment, color: color, cursorTop: cursorTop);
             do
             {
 
@@ -135,7 +145,7 @@ namespace LeSploosh
                     case ConsoleKey.LeftArrow:
                         selection = true;
                         //Move curosr back up thew height of the slection boxes and reprint over them                      
-                        PrintFile(file: leftSelected, color: color, verticalAlignment: verticalAlignment, cursorTop: Console.CursorTop - txtFileHeight);
+                        PrintFile(file: leftSelected, color: color, verticalAlignment: verticalAlignment, cursorTop: Console.CursorTop - txtFileHeight);   
                         break;
 
                     case ConsoleKey.RightArrow:
@@ -147,6 +157,10 @@ namespace LeSploosh
                         break;
                 }
             } while (true); //Loop forever until selection made
+
+            
+            //GameInfo.UpdateGameStateSelection(selectionNumber, selection);
+
         }
 
 

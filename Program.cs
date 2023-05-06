@@ -32,7 +32,7 @@ internal class Program
 
         //Play Intro
 
-        bool introPlayed = true;
+        bool introPlayed = false;
         bool playAgain = false;
 
         //Play background music
@@ -63,12 +63,12 @@ internal class Program
             //Console.BackgroundColor = ConsoleColor.Blue;
             //Console.Clear();
 
-            //if (introPlayed == false)
-            //    Game.PrintIntro();
+            if (introPlayed == false)
+                Game.Intro();
             //Console.BackgroundColor = ConsoleColor.Blue;
-            ////Console.Clear();
+            //Console.Clear();
 
-            
+
 
             //%    The Gameplay Loop   %//
 
@@ -103,7 +103,7 @@ internal class Program
             //%    End conditions   %//
             //gameComplete = true;
 
-            playAgain = Game.Ending();
+            playAgain = Game.PrintEnd();
 
             Console.BackgroundColor = ConsoleColor.Blue;
             Console.Clear();
@@ -116,10 +116,7 @@ internal class Program
         //Print salvatore on the right
         PrintTerminal.PrintFile("Salvatore.txt", 0.66f);
 
-        // Move cursor down a little from top (padding)
-        Console.SetCursorPosition(0, 5);
-
-        PrintTerminal.PrintFile("QuitScript.txt", 0.33f);
+        PrintTerminal.PrintFile("QuitScript.txt", 0.33f, cursorTop: 5);
 
     }
 

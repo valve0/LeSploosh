@@ -11,7 +11,7 @@ public class Squid
 
     public bool SquidStatus { get; set; } //True = alive, false = dead
 
-    private List<int[]> squidPositions;
+    public List<int[]> squidPositions;
 
     public Squid() {
 

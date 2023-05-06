@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data.SqlTypes;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,6 +25,7 @@ namespace LeSploosh
         private int NumberOfTiles { get; init; }
         public int ShotsLeft { get; set; }
 
+        //Needed?
         public static string PrintPosition = "c";
         public int ShotsMade { get; set; }
 
@@ -68,10 +70,8 @@ namespace LeSploosh
              listOfSquids = new List<Squid>();
 
             this.squidTuples = squidTuples;
-            
-           
+                  
             int numberOfDifferentSquid = 0;
-
 
 
             foreach (var squidTuple in squidTuples)
@@ -83,9 +83,7 @@ namespace LeSploosh
 
             }
 
-            
-            
-            
+                 
             this.GameState = 0;
 
             this.FeedBack = string.Empty;
@@ -136,6 +134,9 @@ namespace LeSploosh
             this.ActiveGridNumber = new int[] { 0, 0 };
     
             PlaceSquids();
+
+            var test = listOfSquids;
+            var test2 = 1;
         }
 
 
@@ -179,15 +180,15 @@ namespace LeSploosh
         }
 
 
-        private bool PlaceSubsequentSquidParts((string name, int squidSize, int noSquid) squidTuple, int squidNo, int squidPart, int direction, ref List<int[]> squidPartPositions)
+        private bool PlaceSubsequentSquidPart((string name, int squidSize, int noSquid) squidTuple, int squidNo, int squidPart, int direction, ref List<int[]> squidPartPositions)
         {
             //Generate a rnadom number between 0 and 3 inclusive
             //Chose a random direction (0 = up, 1 = right, 2 = down, 3 = left)
 
             //Based on the first part of the squid generate the following tiles int he supplied direction
-            int[] nextTiles = GenerateNextTiles(squidPartPositions[0][0], squidPartPositions[0][1], squidPart, direction);
-            int nextTileRow = nextTiles[0];
-            int nextTileCol = nextTiles[1];
+            int[] nextTile = GenerateNextTile(squidPartPositions[0][0], squidPartPositions[0][1], squidPart, direction);
+            int nextTileRow = nextTile[0];
+            int nextTileCol = nextTile[1];
 
             //Make sure new grid reference is valid (on board and no squid present)
             if (nextTileRow >= 0 && nextTileRow < Size && nextTileCol >= 0 && nextTileCol < Size && Tiles[nextTileRow, nextTileCol].SquidPresent == false)
@@ -225,7 +226,7 @@ namespace LeSploosh
 
         }
 
-        private int[] GenerateNextTiles(int startTileRow, int startTileCol, int squidPart, int direction)
+        private int[] GenerateNextTile(int startTileRow, int startTileCol, int squidPart, int direction)
         {
 
             int rowAdder = 0;
@@ -278,7 +279,8 @@ namespace LeSploosh
                 for (int squidNo = 1; squidNo < squidTuple.noSquid + 1; squidNo++)
                 {
                     //Initialise
-                    bool allPartsPlaced = false;
+                    bool squidPartPlaced = false;
+                    bool squidPlaced = false;
 
                     do //Loop through the parts of the squid- only leave when it is placed successfully
                     {
@@ -291,7 +293,7 @@ namespace LeSploosh
                             int[] array = new int[2];
                             squidPartPositions.Add(array);
                         }
-
+                        //genreate new direction
                         Random Random = new Random();
                         int direction = Random.Next(4);
 
@@ -307,16 +309,18 @@ namespace LeSploosh
                             }
                             else
                             {
-                                allPartsPlaced = PlaceSubsequentSquidParts(squidTuple, squidNo, squidPart, direction, ref squidPartPositions);
+                                squidPartPlaced = PlaceSubsequentSquidPart(squidTuple, squidNo, squidPart, direction, ref squidPartPositions);
 
+                                if (squidPartPlaced == false)
+                                    break; //Redo squid place loop
+                                else if (squidPartPlaced == true && squidPart + 1 == squidTuple.squidSize)
+                                    squidPlaced = true;
                             }
 
 
-                            if (allPartsPlaced == true && squidPart + 1 == squidTuple.squidSize)
-                                allPartsPlaced = true;
                         }
 
-                    } while (allPartsPlaced == false);
+                    } while (squidPlaced == false);
 
                 }
 
@@ -469,24 +473,9 @@ namespace LeSploosh
             return false; //No change to squid count
         }
 
-        public bool Ending()
-        {
-            string HishScoreFileName = "HighScore.txt";
-
-            PrintEnd();
-
-            if (ShotsMade < HighScore && GameState == 2)
-            {
-                TextFileRepository.WriteStringToFile(HishScoreFileName, ShotsMade.ToString());
-            }
-
-            return PlayAgain();
-
-        }
-
         public void PrintTitleCard()
         {
-            int linesInTitle = 16;
+            int linesInTitle = 17;
 
             //In miliseconds
             int waitTime = 2000;
@@ -498,12 +487,12 @@ namespace LeSploosh
             PrintTerminal.PrintFile("WelcomeTo.txt");
             Thread.Sleep(waitTime);
 
-            var cursorPos = Console.GetCursorPosition();
+            //var cursorPos = Console.GetCursorPosition();
 
             //Move Welcome to down
             for (int i = 0; i < 50; i++)
             {
-
+                //Print null string
                 PrintTerminal.PrintString("                                                                                                                                                              ", cursorTop: Console.CursorTop - 1);
 
                 //Move up werlcome to string one line at a time
@@ -530,117 +519,129 @@ namespace LeSploosh
             Console.Clear();
         }
 
-        public void PrintIntro()
+
+        public void Intro()
         {
 
             PrintTitleCard();
 
             PrintTerminal.PrintFile("Salvatore.txt", 0.66f);
 
-            string file = directory + "IntroScript.txt";
-            string printString = File.ReadAllText(file);
+            PrintTerminal.PrintFile("IntroScript1.txt", 0.33f, cursorTop: 5);
+            PrintTerminal.PrintString();
 
+            bool selection = PrintTerminal.PrintSelection("Selection1L.txt", "Selection1R.txt", 0.33f);
+            PrintTerminal.PrintString();
 
-            using (StringReader reader = new StringReader(printString))
+            if (selection == false)
             {
-                string line = string.Empty;
-                do
-                {
-                    line = reader.ReadLine();
-                    if (line != null && line != "")
-                    {
-
-                        if (line.Substring(0, 2).Equals("%%"))//Sentinal charcaters found %%- slection needs to be made
-                        {
-                            //Get selection number to be made
-                            if (line[2] == '1')
-                            {
-                                bool selection = PrintTerminal.PrintSelection("Selection1L.txt", "Selection1R.txt", 0.33f, cursorTop: 5);
-
-                                if (selection == false) //Exit program
-                                {
-                                    GameState = 1; //Straight quit
-                                    Console.Clear();
-                                    return;
-                                }
-                                //Else continue
-                                PrintTerminal.PrintString();
-
-                            }
-                            else if (line[2] == '2')
-                            {
-                                bool selection = PrintTerminal.PrintSelection("Selection2L.txt", "Selection2R.txt", 0.33f, cursorTop: 5);
-
-
-                                //Else continue
-                                PrintTerminal.PrintString();
-
-                            }
-                        }
-                        else
-                        {
-
-                            PrintTerminal.PrintString(line, verticalAlignment:0.33f);
-                            //Wait for user to press any key to continue
-                            //WaitForAnyInput();
-                            PrintTerminal.PrintString();
-                            Console.ReadKey(false);
-                        }
-                    }
-
-                } while (line != null);
-
-                string finalLine = $"Excellant so far our best sailor has managed to destroy all of zee giant squid using only {HighScore} cannonballs! May you fight as bravely!";
-                PrintTerminal.PrintString(finalLine, verticalAlignment:0.33f);
-
-                Console.ReadKey(false);
-
-                Console.BackgroundColor = ConsoleColor.Blue;
-                Console.Clear();
+                GameState = 1;
+                return; // leave intro
             }
+                
 
+            PrintTerminal.PrintFile("IntroScript2.txt", 0.33f);
+            PrintTerminal.PrintString();
+
+            PrintTerminal.PrintSelection("Selection2L.txt", "Selection2R.txt", 0.33f);
+            PrintTerminal.PrintString();
+
+
+            string finalLine = $"Excellant. So far our best sailor has managed to destroy all of zee giant squid using only {HighScore} cannonballs! May you fight as bravely!";
+            PrintTerminal.PrintString(finalLine, verticalAlignment: 0.33f);
+
+            Console.ReadKey(false);
+
+            Console.BackgroundColor = ConsoleColor.Blue;
+            Console.Clear();
 
         }
 
 
-        public void PrintEnd()
+        public bool PrintEnd()
         {
-            string fileToPrint = string.Empty;
-            string finalLine = string.Empty;
+
+
+            string HishScoreFileName = "HighScore.txt";
+
+            //Hide the crosshair
+            Tiles[ActiveGridNumber[0], ActiveGridNumber[1]].CrosshairBool = false;
+
+            string script = string.Empty;
+            bool highScoreMade = false;
 
             switch (GameState)
             {
 
                 case 1:
-                    fileToPrint = "StraightQuit.txt";
-                    break;
+                    script = "StraightQuit.txt";
+                    return false;
+                    
 
                 case 2:
-                    fileToPrint = "WinScript.txt";
+                    script = "WinScript.txt";
                     break;
 
                 case 3:
-                    fileToPrint = "WinScript.txt";
-                    finalLine = $"Whoa. Wait a sec. {ShotsMade}?! That's a new record...";
+                    script = "WinScript.txt";
+                    highScoreMade = true;
                     break;
 
                 case 4:
-                    fileToPrint = "LoseScript.txt";
+                    script = "LoseScript.txt";
+                    ShowRemainingSquidParts();
                     break;
 
             }
 
+
+            if (GameState != 1)
+            {
+
+                FeedBack = "           Press any key to continue          ";
+                PrintGameInfo();
+                //Wait for user input before continuing
+                Console.ReadKey(false);
+            }
+
             //Remove previous screen
             Console.Clear();
-            //Print salvatore ont he right
+            //Print salvatore on the right
             PrintTerminal.PrintFile("Salvatore.txt", 0.66f);
 
 
-            PrintTerminal.PrintFile(fileToPrint, 0.33f, cursorTop: 5);
+            PrintTerminal.PrintFile(script, 0.33f, cursorTop: 5);
 
-            if (finalLine != null)
-                PrintTerminal.PrintString(finalLine, 0.33f);
+            if (highScoreMade == true)
+                PrintTerminal.PrintString($"Whoa. Wait a sec. {ShotsMade}?! That's a new record...", 0.33f);
 
+
+            if (ShotsMade < HighScore && GameState == 2)
+            {
+                TextFileRepository.WriteStringToFile(HishScoreFileName, ShotsMade.ToString());
+            }
+
+            return PlayAgain();
+
+        }
+
+        private void ShowRemainingSquidParts()
+        {
+
+            foreach (var squid in listOfSquids)
+            {
+                //For each squid loop through their positioins. 
+                
+                for(int i = 0; i < squid.squidPositions.Count; i++) 
+                {
+                    // If the tile at the position does not show a hit- change its state to a "Squid Here"
+                    if (Tiles[squid.squidPositions[i][0],squid.squidPositions[i][1]].SeaState != (TileState) 2)
+                    {
+                        //Change non hit squid tile to "Squid Here state"
+                        Tiles[squid.squidPositions[i][0], squid.squidPositions[i][1]].SeaState = (TileState) 8;
+                    }
+                }
+            }
         }
 
 
@@ -649,11 +650,8 @@ namespace LeSploosh
 
             PrintTerminal.PrintString("Would you like to play again?", 0.33f);
 
-            return PrintTerminal.PrintSelection("PlayAgainL.txt", "PlayAgainR.txt", 0.33f);
+            return PrintTerminal.PrintSelection("PlayAgainL.txt", "PlayAgainR.txt", 0.33f, color: "w");
         }
-
-
-        
 
         private void PrintSquidRemaining()
         {
@@ -844,6 +842,9 @@ namespace LeSploosh
             string str = TextFileRepository.LoadStringFromFile(fileName);
             return str;
         }
+
+
+
 
     }
 }

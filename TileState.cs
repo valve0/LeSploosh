@@ -16,7 +16,9 @@ namespace LeSploosh
         CrosshairMiss,
         CrosshairHit,
         Miss1,
-        Miss2
+        Miss2,
+        SquidHere
+
             //
 
     }
