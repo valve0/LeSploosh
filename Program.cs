@@ -11,42 +11,24 @@ internal class Program
     private static void Main(string[] args)
     {
 
-        Console.BackgroundColor = ConsoleColor.Blue;
-        Console.Clear();
-
-        // later in the app...
-
-        //AudioPlaybackEngine.Instance.PlaySound("crash.wav");
-
         //Makes Window holding Console full screen
         DisplaySetup Display = new();
 
-        //Create PrintTerminal object-necesssray if all static?
-        PrintTerminal PrintTerminal = new();
-
-
-        //Console.BackgroundColor = ConsoleColor.Blue;
-        //Console.Clear();
-
         //%    Set up the game   %//
-
-        //Play Intro
 
         bool introPlayed = false;
         bool playAgain = false;
 
         //Play background music
-        AudioPlaybackEngine.Instance.PlaySound("pirateship.mp3");
+        AudioPlaybackEngine.Instance.PlaySound(Sounds.backgroundMusic);
 
         do
         {
 
-            //Setting up the variables for the game
-            int gridSize = 8;
+            //Setting up the variables for the game. These can all be tweeked.
+            int gridsize = 8;
             int totalShots = 24;
-
-
-            (string name, int squidSize, int noSquid)[] squidTuples = new (string name, int squidSize, int noSquid)[]
+            (string name, int squidsize, int noSquid)[] squidTuples = new (string name, int squidsize, int noSquid)[]
             {
                 ("small", 1, 0),
                 ("medium", 2, 1),
@@ -54,20 +36,14 @@ internal class Program
                 ("giant", 4, 1)
             };
 
-            GameInfo Game = new GameInfo(squidTuples, gridSize, totalShots);
+            GameInfo Game = new GameInfo(squidTuples, gridsize, totalShots);
 
-
-            //string directory = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.Parent.FullName) + @"\LeSploosh\Text Files\";
-
-
-            //Console.BackgroundColor = ConsoleColor.Blue;
-            //Console.Clear();
 
             if (introPlayed == false)
-                Game.Intro();
-            //Console.BackgroundColor = ConsoleColor.Blue;
-            //Console.Clear();
-
+            {
+                Game.PrintIntro();
+                introPlayed = true;
+            }
 
 
             //%    The Gameplay Loop   %//
@@ -95,8 +71,6 @@ internal class Program
                         //Invalid selection: do nothing
                         break;
                 }
-
-                Game.UpdateGameState();
 
             }
 

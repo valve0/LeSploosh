@@ -12,13 +12,13 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace LeSploosh
 {
-    internal class PrintTerminal
+    internal static class PrintTerminal
     {
 
         //private static int textFileLength = 3;
 
 
-        private static string directory = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.Parent.FullName) + @"\LeSploosh\Text Files\";
+        public static string directory = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\Text Files\";
 
         public static void PrintFile(string file, float verticalAlignment = 0.5f, string color = "w", int cursorTop = -1)
         {
@@ -122,14 +122,11 @@ namespace LeSploosh
             if (cursorTop == -1)
                 cursorTop = Console.CursorTop;
 
-            //NEEDED?
-            //Check currently selected box
+            //Get height of text file- used to move cursor back to top after printing
             int txtFileHeight = TextFileRepository.GetNumberOfLinesFile(leftSelected);
 
             bool selection = true; // default to true as arrow starts on the left
-            //PrintTerminal.PrintString("[Use Arrow Keys to move cursor and space to make selection]", verticalAlignment: verticalAlignment, color: color, cursorTop: cursorTop);
 
-            //GameInfo.GetSelection(leftSelected, rightSelected, verticalAlignment, cursorTop, color);
 
             PrintFile(leftSelected, verticalAlignment: verticalAlignment, color: color, cursorTop: cursorTop);
             do
@@ -158,8 +155,6 @@ namespace LeSploosh
                 }
             } while (true); //Loop forever until selection made
 
-            
-            //GameInfo.UpdateGameStateSelection(selectionNumber, selection);
 
         }
 

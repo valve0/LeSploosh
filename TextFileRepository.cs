@@ -9,7 +9,10 @@ namespace LeSploosh
     internal class TextFileRepository
     {
 
-        public static string directory = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.Parent.FullName) + @"\LeSploosh\Text Files\";
+        //public static string directory = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.Parent.FullName) + @"\LeSploosh\Text Files\";
+          
+        public static string directory = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\Text Files\";
+
 
         public static string LoadStringFromFile(string fileName)
         {

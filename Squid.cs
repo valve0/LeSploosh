@@ -5,7 +5,7 @@ public class Squid
 {
 	public int Id { get; set; }
 
-    public int Size { get; set; }
+    public int size { get; set; }
 
     public int HitCounter { get; set; }
 
@@ -24,7 +24,7 @@ public class Squid
 	{
 		this.HitCounter++;
 
-        if (HitCounter == Size)
+        if (HitCounter == size)
             SquidStatus = false;
         else
             SquidStatus = true;
