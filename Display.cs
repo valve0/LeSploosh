@@ -35,7 +35,8 @@ namespace LeSploosh
 
             string text = TextFileRepository.LoadStringFromFile("Resolution.txt");
             string[] arr = text.Split('x');
-            int[] resolutions = Array.ConvertAll(arr, s => int.Parse(s));
+            int[] resolutions = { int.Parse(arr[0]), int.Parse(arr[1])};
+
             int resolutionWidth = resolutions[0];
             int resolutionHeight = resolutions[1];
 
