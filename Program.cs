@@ -12,7 +12,7 @@ internal class Program
     {
 
         //Makes Window holding Console full screen
-        DisplaySetup Display = new();
+        Display display = new();
 
         //%    Set up the game   %//
 
@@ -41,7 +41,7 @@ internal class Program
 
             if (introPlayed == false)
             {
-                Game.PrintIntro();
+                Game.PrintIntro(display);
                 introPlayed = true;
             }
 
@@ -51,20 +51,20 @@ internal class Program
 
             while (Game.GameState == 0)
             {
-                Game.PrintGameInfo();
+                Game.PrintGameInfo(display);
                 var key = Console.ReadKey(false).Key;
 
                 switch (key)
                 {
                     case ConsoleKey.Spacebar:
-                        Game.Attack();
+                        Game.Attack(display);
                         break;
 
                     case ConsoleKey.UpArrow:
                     case ConsoleKey.DownArrow:
                     case ConsoleKey.LeftArrow:
                     case ConsoleKey.RightArrow:
-                        Game.MoveCursor(key);
+                        Game.MoveCursor(display, key);
                         break;
 
                     default:
@@ -77,7 +77,7 @@ internal class Program
             //%    End conditions   %//
             //gameComplete = true;
 
-            playAgain = Game.PrintEnd();
+            playAgain = Game.PrintEnd(display);
 
             Console.BackgroundColor = ConsoleColor.Blue;
             Console.Clear();
@@ -88,9 +88,9 @@ internal class Program
         //Console.BackgroundColor = ConsoleColor.Blue;
 
         //Print salvatore on the right
-        PrintTerminal.PrintFile("Salvatore.txt", 0.66f);
+        PrintTerminal.PrintFile("Salvatore.txt", display.salvatoreAlignment);
 
-        PrintTerminal.PrintFile("QuitScript.txt", 0.33f, cursorTop: 5);
+        PrintTerminal.PrintFile("QuitScript.txt", display.scriptAlignment, cursorTop: 5);
 
     }
 

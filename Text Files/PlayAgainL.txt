@@ -1,5 +1,0 @@
-[Use Arrow Keys to move cursor and space to make selection]
-     ______________                   ______________       
-     |            |                   |            |       
----> |    Yeah!   |                   |     Nah    |       
-     |____________|                   |____________|       
