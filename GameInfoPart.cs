@@ -323,7 +323,7 @@ namespace LeSploosh
 
             //Print and return the play again method
             if (PrintTerminal.PrintSelection("PlayAgainL.txt", "PlayAgainR.txt",
-                    verticalAlignment: scriptAlignmentOffset) == false)
+                    verticalAlignmentOffset: scriptAlignmentOffset) == false)
             {
                 PrintQuitScript();
                 return false;
