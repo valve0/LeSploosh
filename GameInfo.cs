@@ -37,6 +37,14 @@ namespace LeSploosh
 
 
 
+        private int  scriptAlignmentOffset = -50;   
+        private int salvatoreAlignmentOffset = 50;
+        private int squidAlignmentOffset = 53;
+        private int bombAlignmentOffset = -53;
+        private int bombsSquidsTopCursor = 22;
+
+
+
         public GameInfo((string name, int squidsize, int noSquid)[] squidTuples, int gridsize, int totalShots)
         {
 
@@ -321,7 +329,7 @@ namespace LeSploosh
             }
         }
 
-        public void MoveCursor(Display display, ConsoleKey key)
+        public void MoveCursor(ConsoleKey key)
         {
             //Check to see if not at edges of grid
             if (ValidMove(key))
@@ -335,7 +343,7 @@ namespace LeSploosh
                 //Set current tile crosshair status to true
                 tiles[activeGridNumber[0], activeGridNumber[1]].CrosshairBool = true;
                 feedBack = "";
-                PrintGameInfo(display);
+                PrintGameInfo();
 
                 //Play sound moving cursor
                 AudioPlaybackEngine.Instance.PlaySound(Sounds.cursorMove);
@@ -344,7 +352,7 @@ namespace LeSploosh
             }
         }
 
-        public void Attack(Display display)
+        public void Attack()
         {
 
             if (!tiles[activeGridNumber[0], activeGridNumber[1]].Attackable) // Tile not attackable
@@ -375,7 +383,7 @@ namespace LeSploosh
                 Thread.Sleep(100);
 
                 //Run animation
-                AnimateTile(display, Animations.hit, activeGridNumber);
+                AnimateTile(Animations.hit, activeGridNumber);
 
                 MakeShot();
 
@@ -388,7 +396,7 @@ namespace LeSploosh
                 Thread.Sleep(100);
 
                 //Run animation
-                AnimateTile(display, Animations.miss, activeGridNumber);
+                AnimateTile(Animations.miss, activeGridNumber);
 
                 //Set tile to not be attackable
                 MakeShot();
@@ -398,7 +406,7 @@ namespace LeSploosh
             }
 
 
-            PrintGameInfo(display);
+            PrintGameInfo();
 
             UpdateGameState();
             return;
@@ -416,7 +424,7 @@ namespace LeSploosh
             else if (totalShots - shotsMade == 0)
             {
                 //Lose out of shots
-                GameState = 4;
+                GameState = 3;
             }
 
         }
@@ -444,7 +452,7 @@ namespace LeSploosh
 
 
 
-        private void AnimateTile(Display display, TileState[] tileStates, int[] activeGridNumber)
+        private void AnimateTile(TileState[] tileStates, int[] activeGridNumber)
         {
 
             //Temporarily turn off Crosshair
@@ -453,7 +461,7 @@ namespace LeSploosh
             foreach (TileState state in tileStates)
             {
                 tiles[activeGridNumber[0], activeGridNumber[1]].SeaState = state;
-                PrintGameInfo(display);
+                PrintGameInfo();
                 Thread.Sleep(Animations.waitTime);
             }
 

@@ -9,35 +9,34 @@ namespace LeSploosh
     internal partial class GameInfo
     {
 
-        public void PrintIntro(Display display)
+        public void PrintIntro()
         {
 
             PrintTitleCard();
 
-            PrintTerminal.PrintFile("Salvatore.txt", display.salvatoreAlignment);
+            PrintTerminal.PrintFile("Salvatore.txt", verticalAlignmentOffset: salvatoreAlignmentOffset);
 
-            PrintTerminal.PrintFile("IntroScript1.txt", display.scriptAlignment, cursorTop: 5);
+            PrintTerminal.PrintFile("IntroScript1.txt", cursorTop: 5, verticalAlignmentOffset: scriptAlignmentOffset);
             PrintTerminal.PrintString();
 
-            bool selection = PrintTerminal.PrintSelection("Selection1L.txt", "Selection1R.txt", display.scriptAlignment);
-            PrintTerminal.PrintString();
-
-            if (selection == false)
+            if (PrintTerminal.PrintSelection("Selection1L.txt", "Selection1R.txt", verticalAlignmentOffset: scriptAlignmentOffset) == false)
             {
                 GameState = 1;
-                return; // leave intro
+                PrintQuitScript();
+                return;
             }
 
-
-            PrintTerminal.PrintFile("IntroScript2.txt", display.scriptAlignment);
             PrintTerminal.PrintString();
 
-            PrintTerminal.PrintSelection("Selection2L.txt", "Selection2R.txt", display.scriptAlignment);
+            PrintTerminal.PrintFile("IntroScript2.txt", verticalAlignmentOffset: scriptAlignmentOffset);
+            PrintTerminal.PrintString();
+
+            PrintTerminal.PrintSelection("Selection2L.txt", "Selection2R.txt", verticalAlignmentOffset: scriptAlignmentOffset);
             PrintTerminal.PrintString();
 
 
-            string finalLine = $"Excellant. So far our best sailor has managed to destroy all of zee giant squid using only {highScore} bombs! May you fight as bravely!";
-            PrintTerminal.PrintString(finalLine, verticalAlignment: display.scriptAlignment);
+            string finalLine = $"Excellant. So far our best sailor has managed to destroy all of zee giant squid using only {highScore} bombs!\n May you fight as bravely!";
+            PrintTerminal.PrintString(finalLine, verticalAlignmentOffset: scriptAlignmentOffset);
 
             Console.ReadKey(false);
 
@@ -51,20 +50,14 @@ namespace LeSploosh
         {
             int linesInTitle = 17;
 
+            PrintTerminal.PrintFile("WelcomeTo.txt",0.5f,"w",50);
             //In miliseconds
-            int waitTime = 2000;
-
-            string welcomeStartHeight = string.Concat(Enumerable.Repeat($"\n", 50));
-
-            PrintTerminal.PrintString(welcomeStartHeight);
-
-            PrintTerminal.PrintFile("WelcomeTo.txt");
-            Thread.Sleep(waitTime);
+            Thread.Sleep(2000);
 
             //var cursorPos = Console.GetCursorPosition();
 
             //Move Welcome to down
-            for (int i = 0; i < 50; i++)
+            for (int i = 0; i < 45; i++)
             {
                 //Print null string
                 PrintTerminal.PrintString("                                                                                                                                                              ", cursorTop: Console.CursorTop - 1);
@@ -93,7 +86,7 @@ namespace LeSploosh
             Console.Clear();
         }
 
-        public void PrintGameInfo(Display display)
+        public void PrintGameInfo()
         {
 
             Console.SetCursorPosition(0, 0);
@@ -177,15 +170,15 @@ namespace LeSploosh
 
 
 
-            Printbombs(display);
+            PrintBombs();
 
-            PrintSquidRemaining(display);
+            PrintSquidRemaining();
 
 
 
         }
 
-        private void PrintSquidRemaining(Display display)
+        private void PrintSquidRemaining()
         {
 
             string SquidCol = string.Empty;
@@ -195,7 +188,7 @@ namespace LeSploosh
                 SquidCol = SquidCol + this.ReturnSquidString(i) + "\n";
             }
 
-            PrintTerminal.PrintString(SquidCol, verticalAlignment: display.squidAlignment, cursorTop: display.squidTopCursor);
+            PrintTerminal.PrintString(SquidCol, cursorTop: bombsSquidsTopCursor, verticalAlignmentOffset: squidAlignmentOffset);
 
         }
 
@@ -213,7 +206,7 @@ namespace LeSploosh
             return str;
         }
 
-        private void Printbombs(Display display)
+        private void PrintBombs()
         {
 
             //genertate a string with cannonballs in array 5 rows 3 columns with correct states printed
@@ -243,9 +236,9 @@ namespace LeSploosh
                 sb.AppendLine(PrintTerminal.ReturnStringsSideBySide(bombRowList));
             }
 
-            PrintTerminal.PrintString(sb.ToString(), verticalAlignment: display.bombAlignment, cursorTop: display.bombsTopCursor);
+            PrintTerminal.PrintString(sb.ToString(), cursorTop: bombsSquidsTopCursor, verticalAlignmentOffset: bombAlignmentOffset);
 
-            PrintTerminal.PrintString($"Bombs remaining: {totalShots - shotsMade}  ", verticalAlignment: display.bombAlignment, cursorTop: display.bombsTopCursor - 2);
+            PrintTerminal.PrintString($"Shots made: {shotsMade}  ", cursorTop: bombsSquidsTopCursor -2, verticalAlignmentOffset: bombAlignmentOffset);
 
 
         }
@@ -266,11 +259,9 @@ namespace LeSploosh
         }
 
 
-        public bool PrintEnd(Display display)
+        public bool PrintEnd()
         {
 
-
-            string HighScoreFileName = "highScore.txt";
 
             //Hide the crosshair
             tiles[activeGridNumber[0], activeGridNumber[1]].CrosshairBool = false;
@@ -291,11 +282,6 @@ namespace LeSploosh
                     break;
 
                 case 3:
-                    script = "WinScript.txt";
-                    highScoreMade = true;
-                    break;
-
-                case 4:
                     script = "LoseScript.txt";
                     ShowRemainingSquidParts();
                     break;
@@ -308,7 +294,7 @@ namespace LeSploosh
             {
 
                 feedBack = "           Press any key to continue          ";
-                PrintGameInfo(display);
+                PrintGameInfo();
 
                 
 
@@ -320,27 +306,42 @@ namespace LeSploosh
             //Remove previous screen
             Console.Clear();
             //Print salvatore on the right
-            PrintTerminal.PrintFile("Salvatore.txt", display.salvatoreAlignment);
+            PrintTerminal.PrintFile("Salvatore.txt", verticalAlignmentOffset: salvatoreAlignmentOffset);
 
 
-            PrintTerminal.PrintFile(script, display.scriptAlignment, cursorTop: 5);
+            PrintTerminal.PrintFile(script, cursorTop: 5, verticalAlignmentOffset: scriptAlignmentOffset);
 
 
-            if (highScoreMade == true)
-                PrintTerminal.PrintString($"Whoa. Wait a sec. {shotsMade}?! That's a new record...", display.scriptAlignment);
-
-
-            if (shotsMade < highScore && GameState == 2)
+            if (shotsMade < highScore)
             {
-                TextFileRepository.WriteStringToFile(HighScoreFileName, shotsMade.ToString());
+                PrintTerminal.PrintString($"Whoa. Wait a sec. {shotsMade}?! That's a new record...", verticalAlignmentOffset: scriptAlignmentOffset);
+                TextFileRepository.WriteStringToFile("HighScore.txt", shotsMade.ToString());
             }
-
+            
 
             PrintTerminal.PrintString();
 
             //Print and return the play again method
-            return PrintTerminal.PrintSelection("PlayAgainL.txt", "PlayAgainR.txt", verticalAlignment: display.scriptAlignment);
+            if (PrintTerminal.PrintSelection("PlayAgainL.txt", "PlayAgainR.txt",
+                    verticalAlignment: scriptAlignmentOffset) == false)
+            {
+                PrintQuitScript();
+                return false;
+            }
+            
+            else
+                return true;
+        
 
+        }
+
+        public void PrintQuitScript()
+        {
+            Console.Clear();
+            
+            PrintTerminal.PrintFile("Salvatore.txt", verticalAlignmentOffset: salvatoreAlignmentOffset);
+
+            PrintTerminal.PrintFile("QuitScript.txt", cursorTop: 5, verticalAlignmentOffset: scriptAlignmentOffset);
         }
 
         private void ShowRemainingSquidParts()

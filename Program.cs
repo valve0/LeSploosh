@@ -24,86 +24,15 @@ internal class Program
     private static void Main(string[] args)
     {
 
-        // Import the necessary functions from user32.dll
-        [DllImport("user32.dll")]
-        static extern IntPtr GetForegroundWindow();
-        [DllImport("user32.dll")]
-        static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
-        [DllImport("user32.dll")]
-        static extern bool GetWindowRect(IntPtr hWnd, out Rect lpRect);
-        [DllImport("user32.dll")]
-        static extern bool MoveWindow(IntPtr hWnd, int x, int y, int nWidth, int nHeight, bool bRepaint);
-        // Constants for the ShowWindow function
-        const int SW_MAXIMIZE = 3;
-        // Get the handle of the console window
-        IntPtr consoleWindowHandle = GetForegroundWindow();
-        // Maximize the console window
-        ShowWindow(consoleWindowHandle, SW_MAXIMIZE);
-        // Get the screen size
-        Rect screenRect;
-        GetWindowRect(consoleWindowHandle, out screenRect);
-        // Resize and reposition the console window to fill the screen
-        int width = screenRect.Right - screenRect.Left;
-        int height = screenRect.Bottom - screenRect.Top;
-        MoveWindow(consoleWindowHandle, screenRect.Left, screenRect.Top, width, height, true);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        //Console.WriteLine("Before");
-        Console.WriteLine("| ~ | ~ |");
-        //Console.WriteLine($"Window height: {Console.WindowHeight}");
-        //Console.WriteLine($"Window width: {Console.WindowWidth}");
-        //Console.WriteLine($"Largest Window height {Console.LargestWindowHeight}");
-        //Console.WriteLine($"Largest window width {Console.LargestWindowWidth}");
-        //Console.WriteLine($"Buffer height {Console.BufferHeight}");
-        //Console.WriteLine($"Buffer width {Console.BufferWidth}");
-        Console.WriteLine($"{Console.CursorSize}");
-        Console.ReadKey();
-        Console.WriteLine($"{Console.CursorSize}");
-        Console.ReadKey();
-
-
-        //Makes Window holding Console full screen
         Display display = new();
 
-        //Console.WriteLine("After");
-        //Console.WriteLine("| ~ | ~ |");
-        //Console.WriteLine($"Window height: {Console.WindowHeight}");
-        //Console.WriteLine($"Window width: {Console.WindowWidth}");
-        //Console.WriteLine($"Largest Window height {Console.LargestWindowHeight}");
-        //Console.WriteLine($"Largest window width {Console.LargestWindowWidth}");
-        //Console.WriteLine($"Buffer height {Console.BufferHeight}");
-        //Console.WriteLine($"Buffer width {Console.BufferWidth}");
-
-        //Console.ReadKey();
-        //Console.SetCursorPosition(0, 0);
+        PrintTerminal.PrintFile("Setup.txt");
+        Console.ReadLine();
+        Console.Clear();
 
         //%    Set up the game   %//
-        //Console.SetWindowSize(200, 60);
+
 
         bool introPlayed = false;
         bool playAgain = false;
@@ -130,7 +59,7 @@ internal class Program
 
             if (introPlayed == false)
             {
-                Game.PrintIntro(display);
+                Game.PrintIntro();
                 introPlayed = true;
             }
 
@@ -140,20 +69,20 @@ internal class Program
 
             while (Game.GameState == 0)
             {
-                Game.PrintGameInfo(display);
+                Game.PrintGameInfo();
                 var key = Console.ReadKey(false).Key;
 
                 switch (key)
                 {
                     case ConsoleKey.Spacebar:
-                        Game.Attack(display);
+                        Game.Attack();
                         break;
 
                     case ConsoleKey.UpArrow:
                     case ConsoleKey.DownArrow:
                     case ConsoleKey.LeftArrow:
                     case ConsoleKey.RightArrow:
-                        Game.MoveCursor(display, key);
+                        Game.MoveCursor(key);
                         break;
 
                     default:
@@ -166,20 +95,14 @@ internal class Program
             //%    End conditions   %//
             //gameComplete = true;
 
-            playAgain = Game.PrintEnd(display);
+            playAgain = Game.PrintEnd();
 
             Console.BackgroundColor = ConsoleColor.Blue;
-            Console.Clear();
+            //Console.Clear();
 
         } while (playAgain == true);
 
-        Console.Clear();
-        //Console.BackgroundColor = ConsoleColor.Blue;
-
-        //Print salvatore on the right
-        PrintTerminal.PrintFile("Salvatore.txt", display.salvatoreAlignment);
-
-        PrintTerminal.PrintFile("QuitScript.txt", display.scriptAlignment, cursorTop: 5);
+        //Console.Clear();
 
     }
 

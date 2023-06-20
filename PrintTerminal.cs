@@ -20,7 +20,7 @@ namespace LeSploosh
 
         public static string directory = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\Text Files\";
 
-        public static void PrintFile(string file, float verticalAlignment = 0.5f, string color = "w", int cursorTop = -1)
+        public static void PrintFile(string file, float verticalAlignment = 0.5f, string color = "w", int cursorTop = -1, int verticalAlignmentOffset = 0)
         {
 
             //file = directory + file;
@@ -29,11 +29,11 @@ namespace LeSploosh
             string printString = TextFileRepository.LoadStringFromFile(file);
             int len = printString.Length;
 
-            PrintTerminal.PrintString(printString, verticalAlignment, color, cursorTop);
+            PrintTerminal.PrintString(printString, verticalAlignment, color, cursorTop, verticalAlignmentOffset);
 
         }
 
-        public static void PrintString(string stringToPrint, float verticalAlignment = 0.5f, string color = "w", int cursorTop = -1)
+        public static void PrintString(string stringToPrint, float verticalAlignment = 0.5f, string color = "w", int cursorTop = -1, int verticalAlignmentOffset = 0)
         {
 
             //Cannot set the default values be Console.Cursor Top at compile time
@@ -72,11 +72,11 @@ namespace LeSploosh
                     if (line != null)
                     {
 
-                        int cursorLeftPos = (int)((Console.WindowWidth * verticalAlignment) - line.Length / 2);
+                        int cursorLeftPos = (int)((Console.WindowWidth * verticalAlignment) - line.Length / 2) + verticalAlignmentOffset;
                         if (cursorLeftPos < 0)
                             cursorLeftPos = 0;
 
-                        var t = Console.GetCursorPosition();
+                        
                         // Center the output of the string
                         Console.SetCursorPosition(cursorLeftPos, cursorTop);
                         
@@ -124,7 +124,7 @@ namespace LeSploosh
         }
 
 
-        public static bool PrintSelection(string leftSelected, string rightSelected, float verticalAlignment, string color = "w", int cursorTop = -1)
+        public static bool PrintSelection(string leftSelected, string rightSelected, float verticalAlignment = 0.5f, string color = "w", int cursorTop = -1, int verticalAlignmentOffset = 0)
         {
             //Cannot set the default values be Console.Cursor Top at compile time
             if (cursorTop == -1)
@@ -136,7 +136,7 @@ namespace LeSploosh
             bool selection = true; // default to true as arrow starts on the left
 
 
-            PrintFile(leftSelected, verticalAlignment: verticalAlignment, color: color, cursorTop: cursorTop);
+            PrintFile(leftSelected, verticalAlignment: verticalAlignment, color: color, cursorTop: cursorTop, verticalAlignmentOffset: verticalAlignmentOffset);
             do
             {
 
@@ -150,12 +150,12 @@ namespace LeSploosh
                     case ConsoleKey.LeftArrow:
                         selection = true;
                         //Move curosr back up thew height of the slection boxes and reprint over them                      
-                        PrintFile(file: leftSelected, color: color, verticalAlignment: verticalAlignment, cursorTop: Console.CursorTop - txtFileHeight);   
+                        PrintFile(file: leftSelected, color: color, verticalAlignment: verticalAlignment, cursorTop: Console.CursorTop - txtFileHeight, verticalAlignmentOffset: verticalAlignmentOffset);   
                         break;
 
                     case ConsoleKey.RightArrow:
                         selection = false;
-                        PrintFile(file: rightSelected, color: color, verticalAlignment: verticalAlignment, cursorTop: Console.CursorTop - txtFileHeight);
+                        PrintFile(file: rightSelected, color: color, verticalAlignment: verticalAlignment, cursorTop: Console.CursorTop - txtFileHeight, verticalAlignmentOffset: verticalAlignmentOffset);
                         break;
                     default:
                         //Invalid key inputted: do nothing

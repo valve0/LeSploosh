@@ -21,56 +21,13 @@ namespace LeSploosh
         private const int MINIMIZE = 6;
         private const int RESTORE = 9;
 
-        public float scriptAlignment;
-        public float salvatoreAlignment;
-        public float squidAlignment;
-        public float bombAlignment;
-
-        public int bombsTopCursor;
-        public int squidTopCursor;
-
-
         public Display()
         {
-
-            string text = TextFileRepository.LoadStringFromFile("Resolution.txt");
-            string[] arr = text.Split('x');
-            int[] resolutions = { int.Parse(arr[0]), int.Parse(arr[1])};
-
-            int resolutionWidth = resolutions[0];
-            int resolutionHeight = resolutions[1];
-
-            switch (resolutionWidth)
-            {
-                case 3440:
-                    scriptAlignment = 0.33f;
-                    salvatoreAlignment = 0.66f;
-                    squidAlignment = 0.63f;
-                    bombAlignment = 0.37f;
-                    bombsTopCursor = 25;
-                    squidTopCursor = 24;
-                    break;
-
-                case 1920:
-
-                    scriptAlignment = 0.3f;
-                    salvatoreAlignment = 0.76f;
-                    squidAlignment = 0.75f;
-                    bombAlignment = 0.25f;
-                    bombsTopCursor = 22;
-                    squidTopCursor = 20;
-                    break;
-            }
-
-
 
             Console.SetWindowSize(240, 63);
             ShowWindow(ThisConsole, MAXIMIZE);
             Console.BackgroundColor = ConsoleColor.Blue;
             Console.Clear();
-
-
-
 
         }
     }
