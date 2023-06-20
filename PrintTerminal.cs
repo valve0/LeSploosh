@@ -76,9 +76,12 @@ namespace LeSploosh
                         if (cursorLeftPos < 0)
                             cursorLeftPos = 0;
 
-
+                        var t = Console.GetCursorPosition();
                         // Center the output of the string
                         Console.SetCursorPosition(cursorLeftPos, cursorTop);
+                        
+
+
 
                         // Center the output of the string using longest line method
                         //Console.SetCursorPosition((int)((Console.WindowWidth * verticalAlignment) - LongestLineLength(stringToPrint) / 2), Console.CursorTop);

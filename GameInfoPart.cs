@@ -270,7 +270,7 @@ namespace LeSploosh
         {
 
 
-            string HishScoreFileName = "highScore.txt";
+            string HighScoreFileName = "highScore.txt";
 
             //Hide the crosshair
             tiles[activeGridNumber[0], activeGridNumber[1]].CrosshairBool = false;
@@ -332,7 +332,7 @@ namespace LeSploosh
 
             if (shotsMade < highScore && GameState == 2)
             {
-                TextFileRepository.WriteStringToFile(HishScoreFileName, shotsMade.ToString());
+                TextFileRepository.WriteStringToFile(HighScoreFileName, shotsMade.ToString());
             }
 
 

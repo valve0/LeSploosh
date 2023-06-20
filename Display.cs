@@ -64,7 +64,7 @@ namespace LeSploosh
 
 
 
-            Console.SetWindowSize(Console.LargestWindowWidth, Console.LargestWindowHeight);
+            Console.SetWindowSize(240, 63);
             ShowWindow(ThisConsole, MAXIMIZE);
             Console.BackgroundColor = ConsoleColor.Blue;
             Console.Clear();
