@@ -1,10 +1,12 @@
-Ever wanted the incredibly fustrating of Sploosh Kaboom on your very own desktop- wait no longer!
+Modern games not fustrating enough?
+
+Need a dose of nostalgia? Especially Sploosh kaboom from the Legend of Zelda Windwaker. Well...
 
 Introducing....
 
 ![TitleCardText](https://github.com/valve0/LeSploosh/assets/10867487/f2112242-4c39-4b63-9fca-ec7c9fbfd27b)
 
-The nationality (and importantly) copyright ambiguous game that we all love to hate. Now in text based form. Who needs fancy graphics?
+The speed run destroying (and importantly) copyright ambiguous game that we all love to hate. Now in text based form. Who needs fancy graphics?
 
 Find the squids! where are they?!
 
@@ -15,6 +17,9 @@ Not forgetting the retuiring character Salvatore! He still hates his job!
 ![SalvatoreText](https://github.com/valve0/LeSploosh/assets/10867487/e05b54cf-aebe-49d7-becd-19655a4b8778)
 
 A playthrough of the game can be found here https://youtu.be/kAEioha6rQg
+
+
+The boring Stuff:
 
 In order to run this game properly please follow the instructions on boot up of the game. But it is repeated here:
 
