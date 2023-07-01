@@ -37,12 +37,12 @@ namespace LeSploosh
 
 
 
-        private int  scriptAlignmentOffset = -50;   
+        private int scriptAlignmentOffset = -50;   
         private int salvatoreAlignmentOffset = 50;
         private int squidAlignmentOffset = 53;
         private int bombAlignmentOffset = -53;
-        private int bombsSquidsTopCursor = 22;
-
+        private int bombsTopCursor = 22;
+        private int squidsTopCusor = 20;
 
 
         public GameInfo((string name, int squidsize, int noSquid)[] squidTuples, int gridsize, int totalShots)

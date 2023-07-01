@@ -188,7 +188,7 @@ namespace LeSploosh
                 SquidCol = SquidCol + this.ReturnSquidString(i) + "\n";
             }
 
-            PrintTerminal.PrintString(SquidCol, cursorTop: bombsSquidsTopCursor, verticalAlignmentOffset: squidAlignmentOffset);
+            PrintTerminal.PrintString(SquidCol, cursorTop: squidsTopCusor, verticalAlignmentOffset: squidAlignmentOffset);
 
         }
 
@@ -236,9 +236,9 @@ namespace LeSploosh
                 sb.AppendLine(PrintTerminal.ReturnStringsSideBySide(bombRowList));
             }
 
-            PrintTerminal.PrintString(sb.ToString(), cursorTop: bombsSquidsTopCursor, verticalAlignmentOffset: bombAlignmentOffset);
+            PrintTerminal.PrintString(sb.ToString(), cursorTop: bombsTopCursor, verticalAlignmentOffset: bombAlignmentOffset);
 
-            PrintTerminal.PrintString($"Shots made: {shotsMade}  ", cursorTop: bombsSquidsTopCursor -2, verticalAlignmentOffset: bombAlignmentOffset);
+            PrintTerminal.PrintString($"Shots made: {shotsMade}  ", cursorTop: bombsTopCursor -2, verticalAlignmentOffset: bombAlignmentOffset);
 
 
         }
