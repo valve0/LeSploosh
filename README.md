@@ -60,4 +60,4 @@ Requirments:
   In order to change from the terminal to the console you need to go into the settings of the terminal and
   under 'Startup' change the 'Default terminal application to "Windows Console Host". Close and restart this program
 - The font of the Console needs to be set to 16 (default).
-> In order to change the font of the console, right click the top header and go to Properties -> Font -> Size.
+  > In order to change the font of the console, right click the top header and go to Properties -> Font -> Size.
