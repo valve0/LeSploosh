@@ -1,3 +1,9 @@
+# Le Sploosh
+
+- [What is Le Sploosh?](#what-is-le-sploosh)
+- [The Boring Stuff](#the-boring-stuff)
+
+
 Modern games not fustrating enough?
 
 Need a dose of nostalgia? Especially Sploosh kaboom from the Legend of Zelda Windwaker. Well...
@@ -6,7 +12,19 @@ Introducing....
 
 ![TitleCardText](https://github.com/valve0/LeSploosh/assets/10867487/f2112242-4c39-4b63-9fca-ec7c9fbfd27b)
 
+
+## What is Le Sploosh?
+
+Sploosh Kaboom is a minigame in The Legend of Zelda: The Wind Waker similar to the classic board game Battleship. In it, the player is presented with an empty board within which three squid groups of varying length are hidden.
+The player can fire at a chosen grid location, which will then show whether a squid was hit there. A group is eliminated when all of its squids are hit. The object of the game is to eliminate all three groups within 24 shots.
+
+
 The speed run destroying (and importantly) copyright ambiguous game that we all love to hate. Now in text based form. Who needs fancy graphics?
+Based off Sploosh Kaboom or Sinking Ships (google either to see gameplay of the original)
+
+
+![Gameplay](https://github.com/valve0/LeSploosh/assets/10867487/8475348f-dcde-4a13-9981-bd9b6f3ea96d)
+
 
 Find the squids! where are they?!
 
@@ -19,7 +37,7 @@ Not forgetting the retuiring character Salvatore! He still hates his job!
 A playthrough of the game can be found here https://youtu.be/kAEioha6rQg
 
 
-The boring Stuff:
+## The Boring Stuff
 
 In order to run this game properly please follow the instructions on boot up of the game. But it is repeated here:
 
