@@ -2,27 +2,7 @@ Ever wanted the incredibly fustrating of Sploosh Kaboom on your very own desktop
 
 Introducing....
 
-
-     ##### /                          #######               ###                                        /       
-  ######  /                         /       ###              ###                                     #/        
- /#   /  /                         /         ##               ##                                     ##        
-/    /  /                          ##        #                ##                                     ##        
-    /  /                            ###                       ##                                     ##        
-   ## ##              /##          ## ###           /###      ##       /###       /###       /###    ##  /##   
-   ## ##             / ###          ### ###        / ###  /   ##      / ###  /   / ###  /   / #### / ## / ###  
-   ## ##            /   ###           ### ###     /   ###/    ##     /   ###/   /   ###/   ##  ###/  ##/   ### 
-   ## ##           ##    ###            ### /##  ##    ##     ##    ##    ##   ##    ##   ####       ##     ## 
-   ## ##           ########               #/ /## ##    ##     ##    ##    ##   ##    ##     ###      ##     ## 
-   #  ##           #######                 #/ ## ##    ##     ##    ##    ##   ##    ##       ###    ##     ## 
-      /            ##                       # /  ##    ##     ##    ##    ##   ##    ##         ###  ##     ## 
-  /##/           / ####    /      /##        /   ##    ##     ##    ##    ##   ##    ##    /###  ##  ##     ## 
- /  ############/   ######/      /  ########/    #######      ### /  ######     ######    / #### /   ##     ## 
-/     #########      #####      /     #####      ######        ##/    ####       ####        ###/     ##    ## 
-#                               |                ##                                                         /  
- ##                              \)              ##                                                        /   
-                                                 ##                                                       /    
-                                                  ##                                                     /     
-
+![TitleCardText](https://github.com/valve0/LeSploosh/assets/10867487/f2112242-4c39-4b63-9fca-ec7c9fbfd27b)
 
 The nationality (and importantly) copyright ambiguous game that we all love to hate. Now in text based form. Who needs fancy graphics?
 
