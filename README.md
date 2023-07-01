@@ -35,7 +35,7 @@ Not forgetting the retuiring character Salvatore! He still hates his job!
 
 ![SalvatoreText](https://github.com/valve0/LeSploosh/assets/10867487/e05b54cf-aebe-49d7-becd-19655a4b8778)
 
-A playthrough of the game can be found here https://youtu.be/kAEioha6rQg
+A full playthrough of the game can be found here https://youtu.be/kAEioha6rQg.
 
 ## Features
 
