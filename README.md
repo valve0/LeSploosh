@@ -1,6 +1,7 @@
 # Le Sploosh
 
 - [What is Le Sploosh?](#what-is-le-sploosh)
+- [Features](#features)
 - [The Boring Stuff](#the-boring-stuff)
 
 
@@ -36,10 +37,21 @@ Not forgetting the retuiring character Salvatore! He still hates his job!
 
 A playthrough of the game can be found here https://youtu.be/kAEioha6rQg
 
+## Features
+
+- Text based graphics,
+- Animations!
+- Multiple resolutions supported!
+- Sounds! Such as: https://github.com/valve0/LeSploosh/assets/10867487/d7b3f6f6-b306-4614-ba12-c0012496ce30 and https://github.com/valve0/LeSploosh/assets/10867487/bb2a48f0-270b-4ba0-b9f9-077c3daa1572
+- Highscore can be saved beetween sessions.
+- Faithful to the original game
+  
 
 ## The Boring Stuff
 
-In order to run this game properly please follow the instructions on boot up of the game. But it is repeated here:
+Requirments:
+
+> Windows OS.
 
 > The game needs to be run in the Windows Console, not the Windows Terminal which is a newer version
 
