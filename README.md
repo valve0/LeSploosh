@@ -1,7 +1,7 @@
 A playthrough of the game can be found here https://youtu.be/kAEioha6rQg
 
 
-In order to run this game properly please follow th instructions on boot up of the game. But it is repeated here:
+In order to run this game properly please follow the instructions on boot up of the game. But it is repeated here:
 
 > The game needs to be run in the Windows Console, not the Windows Terminal which is a newer version
 
